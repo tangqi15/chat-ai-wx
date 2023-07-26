@@ -51,8 +51,8 @@
     </view>
     <!-- <tabBar :active="0"></tabBar> -->
     <view class="footButton">
-      <view>语音聊天</view>
-      <view>文字聊天</view>
+      <view @click="chatVoice">语音聊天</view>
+      <view @click="chatFont">文字聊天</view>
     </view>
   </view>
 </template>
@@ -90,6 +90,14 @@ export default Vue.extend({
     },
     onChange(value) {
       this.slider = value.detail;
+    },
+    // 文字聊天
+    chatFont() {
+      uni.navigateTo({ url: `/pages/content/chatFont` });
+    },
+    // 语音聊天
+    chatVoice() {
+      uni.navigateTo({ url: `/pages/content/chatVoice` });
     },
   },
 });

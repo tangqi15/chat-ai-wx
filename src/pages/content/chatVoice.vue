@@ -1,86 +1,219 @@
 <template>
-	<!-- 语音遮罩层 -->
-	<view class="voice-mask" v-show="mask">
-		<!--语音条 -->
-		<!-- <view class="voice-bar voice-del" :class="{voiceDel:needCancel}" :style={width:getVoiceBarWidth}> -->
-		<view class="voice-bar voice-del" :class="{voiceDel:needCancel}">
-			<!-- <img src="../static/icon/wave.png" class="voice-volume" :class="{volumeDel:needCancel}"></img> -->
-			<view class="trangle-bottom" :class="{trangleDel:needCancel}"></view>
-		</view>
-		<!-- 底部区域 -->
-		<view class="voice-send">
-			<!-- 取消和转文字图标 -->
-			<view class="voice-middle-wrapper">
-				<!-- 取消 -->
-				<view class="voice-left-wrapper">
-					<view class="cancel-del" :class="{delTip:needCancel}">松开 取消</view>
-					<view class="voice-middle-inner close" :class="{bigger:needCancel}">
-						<!-- <img src="../static/icon/close-grey.png" class="close-icon"></img> -->
-						<text class="wen">取消</text>
+	<view class="container" @tap="togglePicker(0)">
+		<titleHeader :title="title" isBackBtnVisible="true"></titleHeader>
+		<!--内容-->
+		<view class="scrollContent" :style="{height: scrollHeight}">
+			<scroll-view :scroll-into-view="scrollViewId" scroll-y style="height: 100%;">
+				<view class="item-space"></view>
+				<!-- <view class="time">晚上 10:04</view> -->
+				<view v-for="(item, index) in audioList" :key="index">
+					<!--撤销-->
+					<view v-if="item.msgType == 'cancel'" class="cancel">
+						<text v-if="item.source == fromUserId" class="text">你撤回了一条消息</text>
+						<text v-else class="text">成员 {{ item.source }} 撤回了一条消息</text>
+					</view>
+					<view v-else class="item flex-row" :class="[item.source == fromUserId ? 'right' : 'left']">
+						<!--处理头像-->
+						<view v-if="item.source == fromUserId">
+							<image v-if="fromUserFace" :src="fromUserFace" class="face"></image>
+							<image v-else src="@/static/img/face.png" class="face"></image>
+						</view>
+						<view v-else>
+							<image v-if="item.toUserFace || item.userFace" :src="item.toUserFace || item.userFace" class="face"></image>
+							<image v-else src="@/static/img/face.png" class="face"></image>
+						</view>
+						<!--语音-->
+						<view v-if="item.msgType == 'voice'" @tap="playVoice(item)" class="content">
+							<image v-show="voicePlayingId != item.message.id" src="@/static/img/audio.png" class="voice-icon"></image>
+							<image v-show="voicePlayingId == item.message.id" src="@/static/img/audio-play.gif" class="voice-icon"></image>
+						</view>
 					</view>
 				</view>
-				<!-- 转文字 -->
-				<view class="voice-middle-inner to-text">
-					<text class="wen">文</text>
-					<!-- <image src="" class="wen"></image> -->
-				</view>
-				<view class="send-tip" :class="{sendTipNone:needCancel}">松开 发送</view>
+				<view id="bottom"></view>
+			</scroll-view>
+		</view>
+		<!--输入-->
+		<view class="oper flex-row" @tap.prevent.stop="">
+			<view
+			  class="videoChatButton"
+				@touchend="handleTouchEnd"
+				@touchmove="handleTouchMove"
+				@touchstart="handleTouchStart"
+				>按住 说话</view>
+			<!-- <view  @touchstart="startVoice" @touchend="endVoice" class="input" style="text-align: center;">按住 说话</view> -->
+		</view>
+		<!--语音-->
+		<!-- <my-voice v-show="showVoice"></my-voice> -->
+		<!-- 语音遮罩层 -->
+		<view class="voice-mask" v-show="showVoice">
+			<!--语音条 -->
+			<!-- <view class="voice-bar voice-del" :class="{voiceDel:needCancel}" :style={width:getVoiceBarWidth} > -->
+			<view class="voice-bar voice-del" :class="{voiceDel:needCancel}">
+				<!-- <img src="../static/icon/wave.png" class="voice-volume" :class="{volumeDel:needCancel}"></img> -->
+				<view class="trangle-bottom" :class="{trangleDel:needCancel}"></view>
 			</view>
-			<!-- 底部语音按钮 -->
-			<view class="mask-bottom">
-				<!-- <img src="../static/icon/voice-left.png"></img> -->
-				<view>我是一个语音</view>
+			<!-- 底部区域 -->
+			<view class="voice-send">
+				<!-- 取消和转文字图标 -->
+				<view class="voice-middle-wrapper">
+					<!-- 取消 -->
+					<view class="voice-left-wrapper">
+						<view class="cancel-del" :class="{delTip:needCancel}">松开 取消</view>
+						<view class="voice-middle-inner close" :class="{bigger:needCancel}">
+							<!-- <img src="../static/icon/close-grey.png" class="close-icon"></img> -->
+							<text class="wen">取消</text>
+						</view>
+					</view>
+					<!-- 转文字 -->
+					<view class="voice-middle-inner to-text">
+						<text class="wen">文</text>
+						<!-- <image src="" class="wen"></image> -->
+					</view>
+					<view class="send-tip" :class="{sendTipNone:needCancel}">松开 发送</view>
+				</view>
+				<!-- 底部语音按钮 -->
+				<view class="mask-bottom">
+					<!-- <img src="../static/icon/voice-left.png"></img> -->
+					<view>我是一个语音</view>
+				</view>
 			</view>
 		</view>
 	</view>
-
 </template>
 
 <script>
-	import Vue from 'vue';
-	export default Vue.extend({
-		data() {
-			props: {
-				mask: Boolean;
-				isBackBtnVisible: Boolean
+import myVoice from './self-voice.vue'
+import util from '@/static/js/util'
+import request from '@/common/request'
+import titleHeader from '@/wxcomponents/common/cus-header.vue';
+// import { upload } from '@/network/common'
+const innerAudioContext = uni.createInnerAudioContext()
+// uni  提供的全局录音管理器
+// const recorderManger = uni.getrecorderManger()
+const recorderManger = uni.getRecorderManager()
+export default{
+	components: { myVoice, titleHeader },
+	data(){
+		return {
+			util,
+			isEdit: true,
+			isFocus: false,
+			showEmoji: false,
+			showFile: false,
+			showVoice: false,
+			scrollHeight: 'auto',		// 内容区域高度
+			statusBarHeight: 0,		// 状态栏高度
+			scrollViewId: '',		// 滚动到最底部
+			voicePlayingId: '',		// 正在播放的消息ID
+			audioList: [],
+			socketMsgQueue: [], // 消息队列
+			fromUserId: uni.getStorageSync('userId'),
+			fromUserFace: uni.getStorageSync('userFace'),
+			toUserId: '',
+			toUserName: '',
+		}
+	},
+	onLoad(option){
+		// 初始化内容高度
+		this.setScrollHeight()
+		
+		// 初始化状态栏高度
+		uni.getSystemInfo({
+			success: res=>{
+				this.statusBarHeight = res.statusBarHeight
 			}
-			return {
-				timer: null, // 定时器
-				length: 0, // 录音长度
-				startX: 0, // 手指在按钮的初始位置X
-				startY: 0, // 手指在按钮的初始位置Y
-				needCancel: false, // 语音取消发送
-				recorderManger: null, // 录音工具
-				innerAudioContext: null, // 音频播放
-				audioList: [], // 语音数组
+		})
+		
+		// 结束录音
+		recorderManger.onStop(res => {
+			console.log('执行到这里了么');
+			this.upload(res.tempFilePath)
+		})
+		
+		// 结束播放
+		innerAudioContext.onEnded(res=>{
+			this.voicePlayingId = ''
+		})
+		
+		// 设置标题
+		uni.setNavigationBarTitle({ title: option.toUserName })
+		
+		// 获取参数
+		this.toUserId = option.toUserId
+		this.toUserName = option.toUserName
+		
+		// 获取消息记录
+		this.getList()
+		
+		// 监听webSocket消息
+		// this.$xbcim.onmessage(data=>{
+		// 	// 只接受单聊消息
+		// 	if(data.type != 'single') return
+			
+		// 	// 处理数据
+		// 	data.id = data.extra.id
+		// 	data.userFace = data.extra.userFace
+		// 	this.list.push(data)
+		// 	this.initScrollBar()
+		// })
+	},
+	onHide(){
+		innerAudioContext.stop()
+	},
+	// onBackPress(){
+	// 	if(this.showFile || this.showEmoji){
+	// 		this.showFile = false
+	// 		this.showEmoji = false
+	// 		this.setScrollHeight(0)
+	// 		return true
+	// 	}
+	// 	return false
+	// },
+	methods: {
+		// 初始化滚动
+		initScrollBar(){
+			setTimeout(()=>{
+				this.scrollViewId = ''
+				setTimeout(()=>{
+					this.scrollViewId = 'bottom'
+					setTimeout(()=>{this.scrollViewId = ''}, 100)
+				}, 100)
+			}, 100)
+		},
+		// 设置scroll的高度
+		setScrollHeight(descHeight=0){
+			// #ifdef MP-WEIXIN
+			this.scrollHeight = `calc(100vh - 110rpx - ${descHeight}px)`
+			// #endif
+			// #ifdef APP-PLUS
+			this.scrollHeight = `calc(100vh - 110upx - ${descHeight}px)`
+			// #endif
+			// #ifdef H5
+			this.scrollHeight = `calc(100vh - 110upx - 88rpx - ${descHeight}px)`
+			// #endif
+		},
+		// 切换选择
+		togglePicker(height=0, type=''){
+			this.showEmoji = false
+			this.showFile = false
+			let status = height >0 ? true : false
+			
+			switch(type){
+				case 'emoji':
+					this.showEmoji = status; break
+				case 'file':
+					this.showFile = status; break
 			}
+			
+			setTimeout(()=>{
+				this.setScrollHeight(height)
+				this.initScrollBar()
+			}, 50)
 		},
-		onLoad(options) {
-			// uni  提供的全局录音管理器
-			this.recorderManger = uni.getRecorderManager();
-
-			// 语音播放
-			this.innerAudioContext = uni.createInnerAudioContext();
-		},
-		computed: {
-			// 计算语音条宽度
-			getVoiceBarWidth() {
-				return (230 + this.length * 4) + 'rpx';
-			}
-		},
-		methods: {
-			settingParameters() {
-				this.registerShow = !this.registerShow;
-				console.log(this.registerShow, 'ccccc');
-			},
-			onChange(value) {
-				this.slider = value.detail;
-			},
-			handleTouchStart(e) {
-
-				console.log('1', '按下啦啦啦啦');
-				this.mask = true; // 打开语音 弹窗
-				this.recorderManger.start();
+		handleTouchStart(e) {
+				this.showVoice = true; // 打开语音 弹窗
+				console.log(this.showVoice, 'this.showVoice');
+				recorderManger.start();
 				this.length = 1;
 				// 位置  用来判断  滑动到哪里， 取消发送语音
 				this.startX = e.touches[0].pageX;
@@ -95,7 +228,6 @@
 				}, 1000)
 			},
 			handleTouchMove(e) {
-				console.log('2', '按下并且移动');
 				if (this.startX - e.touches[0].pageX > 14 && this.startY - e.touches[0].pageY > 50) {
 					this.needCancel = true;
 				} else {
@@ -104,105 +236,464 @@
 			},
 			// 发送语音
 			handleTouchEnd() {
-				console.log('3', '松开');
-				this.mask = false;
+				this.showVoice = false;
 				clearInterval(this.tiemr);
-				this.recorderManger.stop();
-				this.recorderManger.onStop((res) => {
-					console.log(res, 'resresresresres');
+				recorderManger.stop();
+				recorderManger.onStop((res) => {
 					const message = {
-						voice: res.tempFilePath,
+						id: '1',
+						content: res.tempFilePath,
 						length: this.length
 					};
 					if (!this.needCancel) {
-						this.inputSubmit(message, 2);
+						this.inputSubmit(message, 'voice');
 					}
 					this.needCancel = false;
 				})
 			},
 			// 语音 处理  发送接口
-			inputSubmit(message, types) {
+			inputSubmit(message, msgType) {
 				// console.log(message);
 				this.audioList.push({
 					message,
-					types
+					msgType
 				})
 			},
-			// 处理语音长度
-			handleVoiceWidth(lenght) {
-				lenght = lenght - 1;
-				let Lmin = 138;
-				let Lmax = 366
-				let barCanChangeLen = Lmax - Lmin;
-
-				// 11秒以内的语音
-				if (lenght < 11) {
-					// VoicePlayTimes 为10秒时，正好为可变长度的一半
-					return (Lmin + lenght * 0.05 * barCanChangeLen) + 'rpx';
-				} else {
-					// 12-60秒的语音
-					return (Lmin + 0.5 * barCanChangeLen + (lenght - 10) * 0.01 * barCanChangeLen) + 'rpx';
+		// 开始录音
+		startVoice(){
+			this.showVoice = true
+			recorderManger.start()
+		},
+		// 结束录音
+		endVoice(){
+			this.showVoice = false
+			recorderManger.stop()
+		},
+		// 上传
+		upload(filePath){
+			this.util.loading('上传中')
+			// 上传路劲  TODO
+			url = '';
+			uni.uploadFile({
+				url: url,
+				name: 'file',
+				filePath,
+				formData: {
+					userId: this.fromUserId
+				},
+				header: this.util.getHeader(),
+				success: res=>{
+					uni.hideLoading()
+					let data = JSON.parse(res.data)
+					this.pushMessage(data.data, 'voice')
+				},
+				fail: err=>{
+					uni.hideLoading()
 				}
-			},
-			// 播放语音
-			handleVoicePlay(item) {
-				item.isFirstPlay = false;
-				this.innerAudioContext.src = item.message.voice;
-				this.isPlay = !this.isPlay;
-				this.isPlay ? this.innerAudioContext.play() : this.innerAudioContext.stop();
-				this.innerAudioContext.onEnded(() => {
-					this.isPlay = false;
-				})
-				this.innerAudioContext.onStop(() => {
-					this.isPlay = false;
-				})
-			},
+			})
+		},
+		// 播放录音
+		playVoice(item){
+			if(this.voicePlayingId){
+				this.voicePlayingId = ''
+			}else{
+				this.voicePlayingId = item.message.id
+				innerAudioContext.src = item.message.content
+				innerAudioContext.play()
+			}
+		},
+		// 长按
+		longPress(msg){
+			let data = {
+				type: 'single',
+				source: this.fromUserId,
+				dest: this.toUserId,
+				timestamp: new Date().getTime(),
+				msg: {
+					id: msg.id,
+					fromUserId: msg.fromUserId,
+					toUserId: msg.toUserId,
+					type: 'cancel',
+					content: msg.content
+				}
+			}
+			
+			// 撤销发送消息
+			uni.sendSocketMessage({
+				data: JSON.stringify(data),
+				success: res=>{
+					// 撤销本地消息
+					this.audioList = this.audioList.map(item=>{
+						item.type = item.id == msg.id ? 'cancel' : item.type
+						return item
+					})
+				}
+			})
+		},
+		// 推送消息
+		pushMessage(content, type='text', cb=()=>{}){
+			
+			// 组合消息体：需要保存在本地数据库的数据
+			let msgData = {
+				fromUserId: this.fromUserId,
+				userFace: uni.getStorageSync('userFace'),
+				toUserId: this.toUserId,
+				type,
+				content
+			}
+			
+			// 加入信息
+			this.list.push({
+				source: this.fromUserId,
+				target: this.toUserId,
+				content: msgData.content,
+				userFace: uni.getStorageSync('userFace'),
+				type: 'single',
+				msgType: type
+			})
+			
+			// 初始化滚动条
+			this.initScrollBar()
+			cb ? cb() : this.togglePicker(0, 'file')
+			
+			// var apiUrl = 'voice/all-voice';
+			request(apiUrl);
+			// postMessage(apiUrl);
+			// uni.request({
+			// 	url: apiUrl,
+			// 	data: {
+			// 		"key": 'free',
+			// 		"msg": encodeURI(content),
+			// 		"appid": 'wx07c87b31ee791408'
+			// 	},
+			// 	success: (res) => {
+			// 		console.log('request success:', res);
+			// 		// 加入信息
+			// 		this.list.push({
+			// 			source: this.fromUserId+1,
+			// 			target: this.toUserId,
+			// 			content: res.data.content,
+			// 			userFace: uni.getStorageSync('userFace'),
+			// 			type: 'single',
+			// 			msgType: type
+			// 		})
+					
+			// 		// 初始化滚动条
+			// 		this.initScrollBar()
+			// 		cb ? cb() : this.togglePicker(0, 'file')
+			// 	},
+			// 	fail: (err) => {
+			// 		console.log('request fail333', err);
+			// 		uni.showModal({
+			// 			content: err.errMsg,
+			// 			showCancel: false
+			// 		})
+			// 	}
+			// });
+		},
+		// 获取记录
+		getList(){
+			setTimeout(()=>{
+				this.scrollViewId = 'bottom'
+				setTimeout(()=>{this.scrollViewId = ''}, 100)
+			}, 100)
+			// uni.request({
+			// 	url: this.$api.getSingleRecord,
+			// 	data: {
+			// 		fromUserId: this.fromUserId,
+			// 		toUserId: this.toUserId
+			// 	},
+			// 	header: this.util.getHeader(),
+			// 	success: res=>{
+			// 		this.list = res.data.data.map(item=>{
+			// 			if(['voice', 'image'].includes(item.type)){
+			// 				item.content = this.$api.staticPath+item.content
+			// 			}
+			// 			if(item.toUserFace){
+			// 				item.toUserFace = this.$api.staticPath+item.toUserFace
+			// 			}
+						
+			// 			// 为了和socket的字段一致，此处做一个转换；
+			// 			// 数据表字段可以直接设置为source、target和msgType
+			// 			item.source = item.fromUserId
+			// 			item.target = item.toUserId
+			// 			item.msgType = item.type
+			// 			return item
+			// 		})
+					
+			// 		this.scrollViewId = ''
+					
+			// 	}
+			// })
 		}
-	})
+	}
+}
 </script>
 
-
 <style lang="scss" scoped>
-	/* 通用样式 */
-	.content {
-		margin-top: 100rpx;
-		box-sizing: border-box;
+	.flex-row{
 		display: flex;
-		flex-direction: column;
-		background: #F0F5F9;
-		height: 100vh;
-		color: #071A3A;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+	}
+.container{
+	height: 100vh;
+	overflow: hidden;
+}
+
+/* #ifdef H5 */
+.container{
+	height: calc(100vh - 88upx);
+}
+/* #endif */
+
+.status_bar,
+.container,
+.header,
+.emoji,
+.file{
+	background-color: #F3F3F3;
+}
+.header{
+	border-bottom: 2upx solid #EEE;
+	
+	.center{
+		font-weight: bold;
+	}
+}
+.map{
+	width: 60%;
+	height: 300upx;
+	background-color: #FFF !important;
+	
+	&::before{
+		border-right: 30upx solid #FFF !important;
+	}
+	
+	.title{
+		height: 80upx;
+		font-size: 28upx;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		-webkit-box-orient: vertical;
+	}
+	
+	.box{
+		width: 100%;
+		height: 170upx;
+		margin-top: 10upx;
+	}
+}
+.emoji{
+	height: 400upx;
+	padding: 0 0 20upx 20upx;
+	position: relative;
+	
+	.list{
+		width: 100%;
+		height: 400upx;
+		padding: 20upx 0;
+		overflow-y: auto;
+		
+		.item{
+			float: left;
+			display: block;
+			height: 60upx;
+			line-height: 60upx;
+			width: calc(100% / 12);
+			margin-right: 20upx;
+		}
+	}
+}
+.file{
+	padding: 30upx 20upx;
+	
+	.list{
+		overflow: hidden;
+		padding-left: 10upx;
+		justify-content: flex-start;
+	}
+	
+	.item{
+		float: left;
+		width: 110upx;
+		height: 110upx;
+		border-radius: 10upx;
+		margin-right: 40upx;
+		background-color: #FFF;
+		
+		.icon{
+			width: 50upx;
+		}
+		
+		.text{
+			font-size: 24upx;
+			margin-top: 4upx;
+		}
+	}
+}
+.oper{
+	height: 110upx;
+	padding: 0 20upx;
+	box-sizing: border-box;
+	border-top: 2upx solid #EEE;
+	border-bottom: 2upx solid #EEE;
+	
+	.input{
+		height: 68upx;
+		line-height: 68upx;
+		padding: 0 20upx;
+		font-size: 28upx;
+		border-radius: 10upx;
+		background-color: #fff;
+		width: calc(100% - 120upx - 20upx);
 	}
 
-	.headerButton {
-		display: flex;
-		justify-content: space-around;
-	}
-
-	/* .image-img {
-	  width: 100%;
-	  height: 100%;
-	} */
-	.custom-button {
-		width: 26px;
-		color: #fff;
-		font-size: 10px;
-		line-height: 18px;
+	.videoChatButton {
+		height: 68upx;
+		line-height: 68upx;
+		padding: 0 20upx;
+		font-size: 28upx;
+		border-radius: 10upx;
+		background-color: #fff;
+		width: calc(100% - 120upx - 20upx);
 		text-align: center;
-		background-color: #ee0a24;
-		border-radius: 100px;
 	}
-
-	.button {
-		display: flex;
-		justify-content: flex-end;
-		border-radius: 10px;
+	.icon{
+		width: 60upx;
+		height: 60upx;
 	}
+	.btn{
+		color: #fff;
+		width: 90upx;
+		height: 52upx;
+		font-size: 24upx;
+		line-height: 52upx;
+		text-align: center;
+		border-radius: 10upx;
+		background-color: #2BA245;
+	}
+}
+.scrollContent{
+	overflow-y: auto;
+	transition: all 0.1s ease;
+	height: calc(100vh - 88upx - 110upx - var(--status-bar-height) - 20upx);
+	
+	/* #ifdef MP-WEIXIN */
+	height: calc(100vh - 88upx - var(--status-bar-height));
+	/* #endif */
+	/* #ifdef H5 */
+	height: calc(100vh - 88upx - 110upx - var(--status-bar-height));
+	/* #endif */
+	
+	.item-space{
+		height: 30upx;
+	}
+	
+	.time{
+		color: #666;
+		font-size: 24upx;
+		text-align: center;
+		margin-bottom: 20upx;
+	}
+	
+	.cancel{
+		width: 100%;
+		height: 40upx;
+		text-align: center;
+		margin-bottom: 30upx;
+		
+		.text{
+			color: #999;
+			font-size: 24upx;
+		}
+	}
+	
+	.item{
+		margin: 0 30upx 30upx;
+		align-items: flex-start;
+		justify-content: flex-start;
+		
+		.face{
+			width: 80upx;
+			height: 80upx;
+			border-radius: 10upx;
+		}
+		
+		.content{
+			color: #000;
+			font-size: 32upx;
+			// min-height: 80upx;
+			border-radius: 10upx;
+			padding: 20upx 24upx;
+			background-color: #fff;
+			word-break: break-all;
+			word-wrap: break-word;
+			max-width: calc(100% - 100upx - 120upx);
+			position: relative;
+			
+			&::before{
+				content: '';
+				width: 0;
+				height: 0;
+				border-right: 30upx solid #FFF;
+				border-top: 20upx solid transparent;
+				border-bottom: 20upx solid transparent;
+				position: absolute;
+				top: 24upx;
+			}
+			
+			.voice-icon{
+				width: 32upx;
+				height: 40upx;
+				margin-right: 180upx;
+				margin-bottom: -8upx;
+			}
+		}
+		
+		&.left{
+			.face{
+				margin-right: 30upx;
+			}
+			.content::before{
+				left: -20upx;
+			}
+		}
+		
+		&.right{
+			flex-direction: row-reverse;
+			.face{
+				margin-left: 30upx;
+			}
+			.content{
+				background-color: #A0EA6F;
+				
+				&::before{
+					right: -20upx;
+					transform: rotate(180deg);
+					border-right: 30upx solid #A0EA6F;
+				}
+				
+				.voice-icon{
+					margin-right: 0;
+					margin-left: 180upx;
+					transform: rotate(180deg);
+				}
+			}
+		}
+	}
+	
+	#bottom{
+		height: 0;
+	}
+}
 
 
-
-
-	.voice-mask {
+// 语音
+.voice-mask {
 		position: fixed;
 		top: 0;
 		right: 0;
@@ -248,7 +739,6 @@
 	.volumeDel {
 		width: 80rpx;
 	}
-
 	.trangle-bottom {
 		position: absolute;
 		bottom: -38rpx;
@@ -360,5 +850,30 @@
 		bottom: 0;
 		left: 0;
 		margin: auto;
+	}
+
+
+
+	.chat-voice-right {
+		text-align: right;
+		float: right;
+		display: flex;
+		align-items: center;
+	}
+
+	.chat-voice-right-inner {
+		background-color: #51FF50;
+	}
+	.voice-img {
+		width: 60rpx;
+		height: 40rpx;
+	}
+
+	.trangle-right {
+		width: 0;
+		height: 0;
+		border-top: 15rpx solid transparent;
+		border-bottom: 15rpx solid transparent;
+		border-left: 15rpx solid #000000;
 	}
 </style>

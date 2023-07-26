@@ -1,6 +1,9 @@
 {
 	"pages": [
 		{
+			"path": "pages/content/chatVoice"
+		},
+		{
 			"path": "pages/home/index"
 		},
 		{
@@ -14,7 +17,12 @@
 		},
 		{
 			"path": "pages/content/chatFont"
+		},
+		
+		{
+			"path": "pages/content/chatDetail"
 		}
+		
 	],
 
 	"meta": {
