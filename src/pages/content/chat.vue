@@ -386,8 +386,9 @@ export default{
 			this.initScrollBar()
 			cb ? cb() : this.togglePicker(0, 'file')
 			
-			var apiUrl = 'voice/all-voice';
+			// var apiUrl = 'voice/all-voice';
 			request(apiUrl);
+			// postMessage(apiUrl);
 			// uni.request({
 			// 	url: apiUrl,
 			// 	data: {
