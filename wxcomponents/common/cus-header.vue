@@ -2,7 +2,7 @@
 <template>
 	  <view class="header bg-fff">
 		<!-- safe-area-inset-top  开启顶部安全区适配 -->
-		<van-nav-bar :title="title" class="header-bar" safe-area-inset-top fixed border placeholder>
+		<van-nav-bar :title="title" class="header-bar" safe-area-inset-top fixed :border="true" placeholder>
 			<!-- 插槽 自定义左侧 TODO-->
 			<!-- <view #left> -->
 			<template #left>
@@ -17,7 +17,7 @@
 		</van-nav-bar>
 	</view>
 </template>
-<script lang="ts">
+<script>
 	import Vue from 'vue';
 
 	export default Vue.extend({
@@ -40,6 +40,7 @@
 <style lang="scss" scoped>
 	.header {
 	  z-index: 999;
+		height: 20rpx;
 	}
 	
 	.header-bar {

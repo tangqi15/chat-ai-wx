@@ -19,20 +19,20 @@
 	100%{height: 0%;}
 }
 .voice{
-	width: 320upx;
-	height: 240upx;
+	width: 320rpx;
+	height: 240rpx;
 	transform: translate3d(-50%, -70%, 0);
 	background: rgba(0,0,0,0.5);
-	border-radius: 10upx;
-	padding-top: 60upx;
+	border-radius: 10rpx;
+	padding-top: 60rpx;
 	position: fixed;
 	left: 50%;
 	top: 50%;
 	z-index: 999;
 }
 .voice .voice-items{
-	width: 280upx;
-	height: 80upx;
+	width: 280rpx;
+	height: 80rpx;
 	margin: 0 auto;
 	display: flex;
 	flex-direction: row;
@@ -40,9 +40,9 @@
 	justify-content: center;
 }
 .voice .voice-items .voice-item{
-	width: 4upx;
+	width: 4rpx;
 	height: 100%;
-	margin: 0 6upx;
+	margin: 0 6rpx;
 	background-color: #CCC;
 }
 .voice .voice-items .voice-item:nth-child(1){
@@ -68,8 +68,8 @@
 }
 .voice .voice-title{
 	color: #fff;
-	font-size: 24upx;
-	margin-top: 30upx;
+	font-size: 24rpx;
+	margin-top: 30rpx;
 	text-align: center;
 }
 </style>

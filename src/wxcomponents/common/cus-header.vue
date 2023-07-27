@@ -17,7 +17,7 @@
 		</van-nav-bar>
 	</view>
 </template>
-<script lang="ts">
+<script>
 	import Vue from 'vue';
 
 	export default Vue.extend({
@@ -40,7 +40,7 @@
 <style lang="scss" scoped>
 	.header {
 	  z-index: 999;
-		height: 20upx;
+		height: 20rpx;
 	}
 	
 	.header-bar {

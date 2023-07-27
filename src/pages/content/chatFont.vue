@@ -1,39 +1,42 @@
 <template>
-  <view class="chat">
+  <view class="container">
     <titleHeader :title="title" isBackBtnVisible="true"></titleHeader>
-    <scroll-view
-      :style="{ height: `${windowHeight}rpx` }"
-      id="scrollview"
-      scroll-y="true"
-      :scroll-top="scrollTop"
-      :scroll-with-animation="true"
-      class="scroll-view"
-    >
-      <!-- 聊天主体 -->
-      <view id="msglistview" class="chat-body">
-        <!-- 聊天记录 -->
-        <view v-for="(item, index) in msgList" :key="index">
-          <!-- 自己发的消息 -->
-          <view class="item self" v-if="item.userContent != ''">
-            <!-- 文字内容 -->
-            <view class="content right">
-              {{ item.userContent }}
+    <!--内容-->
+    <view class="scrollContent">
+      <scroll-view
+        :style="{ height: `${windowHeight}rpx` }"
+        id="scrollview"
+        scroll-y="true"
+        :scroll-top="scrollTop"
+        :scroll-with-animation="true"
+        class="scroll-view"
+      >
+        <!-- 聊天主体 -->
+        <view id="msglistview" class="chat-body">
+          <!-- 聊天记录 -->
+          <view v-for="(item, index) in msgList" :key="index">
+            <!-- 自己发的消息 -->
+            <view class="item self" v-if="item.userContent != ''">
+              <!-- 文字内容 -->
+              <view class="content right">
+                {{ item.userContent }}
+              </view>
+              <!-- 头像 -->
+              <view class="avatar"> </view>
             </view>
-            <!-- 头像 -->
-            <view class="avatar"> </view>
-          </view>
-          <!-- 机器人发的消息 -->
-          <view class="item Ai" v-if="item.botContent != ''">
-            <!-- 头像 -->
-            <view class="avatar"> </view>
-            <!-- 文字内容 -->
-            <view class="content left">
-              {{ item.botContent }}
+            <!-- 机器人发的消息 -->
+            <view class="item Ai" v-if="item.botContent != ''">
+              <!-- 头像 -->
+              <view class="avatar"> </view>
+              <!-- 文字内容 -->
+              <view class="content left">
+                {{ item.botContent }}
+              </view>
             </view>
           </view>
         </view>
-      </view>
-    </scroll-view>
+      </scroll-view>
+    </view>
     <!-- 底部消息发送栏 -->
     <!-- 用来占位，防止聊天消息被发送框遮挡 -->
     <view class="chat-bottom">
@@ -63,6 +66,7 @@ export default {
       userId: "",
       //发送的消息
       chatMsg: "",
+      // 接口拉取的消息队列
       msgList: [
         {
           botContent: "hello，请问我有什么可以帮助你的吗？",
@@ -83,7 +87,7 @@ export default {
   },
   computed: {
     windowHeight() {
-      return this.rpxTopx(uni.getSystemInfoSync().windowHeight);
+      return this.rpxTopx(uni.getSystemInfoSync().windowHeight) - 28;
     },
   },
   methods: {
@@ -127,8 +131,24 @@ textarea {
   box-sizing: border-box;
 }
 
+.scrollContent {
+  overflow-y: scroll;
+  transition: all 0.1s ease;
+  // height: 100vh;
+  // height: calc(100vh - 88rpx - 110rpx - var(--status-bar-height) + 20rpx);
+
+  /* #ifdef MP-WEIXIN */
+  height: calc(100vh - 88rpx - var(--status-bar-height) - 20rpx);
+  /* #endif */
+  /* #ifdef H5 */
+  height: calc(100vh - 88rpx - 110rpx - var(--status-bar-height));
+  /* #endif */
+}
+
 /* 聊天消息 */
-.chat {
+.container {
+  height: 100vh;
+  overflow: hidden;
   .scroll-view {
     ::-webkit-scrollbar {
       display: none;

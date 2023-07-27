@@ -24,7 +24,7 @@
 						<!--文本-->
 						<view v-if="item.msgType == 'text'" @longpress="longPress(item)" class="content flex-row">{{ item.content }}</view>
 						<!--图片-->
-						<image v-if="item.msgType == 'image'" @longpress="longPress(item)" :src="item.content" mode="widthFix" style="width: 320upx;"></image>
+						<image v-if="item.msgType == 'image'" @longpress="longPress(item)" :src="item.content" mode="widthFix" style="width: 320rpx;"></image>
 						<!--地图-->
 						<view v-if="item.msgType == 'map'" class="content map" @tap="openLocation(item.content)">
 							<view class="title">{{ item.content.address }}</view>
@@ -204,10 +204,10 @@ export default{
 			this.scrollHeight = `calc(100vh - 110rpx - ${descHeight}px)`
 			// #endif
 			// #ifdef APP-PLUS
-			this.scrollHeight = `calc(100vh - 110upx - ${descHeight}px)`
+			this.scrollHeight = `calc(100vh - 110rpx - ${descHeight}px)`
 			// #endif
 			// #ifdef H5
-			this.scrollHeight = `calc(100vh - 110upx - 88rpx - ${descHeight}px)`
+			this.scrollHeight = `calc(100vh - 110rpx - 88rpx - ${descHeight}px)`
 			// #endif
 		},
 		// 切换选择
@@ -474,7 +474,7 @@ export default{
 
 /* #ifdef H5 */
 .container{
-	height: calc(100vh - 88upx);
+	height: calc(100vh - 88rpx);
 }
 /* #endif */
 
@@ -486,7 +486,7 @@ export default{
 	background-color: #F3F3F3;
 }
 .header{
-	border-bottom: 2upx solid #EEE;
+	border-bottom: 2rpx solid #EEE;
 	
 	.center{
 		font-weight: bold;
@@ -494,16 +494,16 @@ export default{
 }
 .map{
 	width: 60%;
-	height: 300upx;
+	height: 300rpx;
 	background-color: #FFF !important;
 	
 	&::before{
-		border-right: 30upx solid #FFF !important;
+		border-right: 30rpx solid #FFF !important;
 	}
 	
 	.title{
-		height: 80upx;
-		font-size: 28upx;
+		height: 80rpx;
+		font-size: 28rpx;
 		overflow: hidden;
 		text-overflow: ellipsis;
 		display: -webkit-box;
@@ -513,192 +513,192 @@ export default{
 	
 	.box{
 		width: 100%;
-		height: 170upx;
-		margin-top: 10upx;
+		height: 170rpx;
+		margin-top: 10rpx;
 	}
 }
 .emoji{
-	height: 400upx;
-	padding: 0 0 20upx 20upx;
+	height: 400rpx;
+	padding: 0 0 20rpx 20rpx;
 	position: relative;
 	
 	.list{
 		width: 100%;
-		height: 400upx;
-		padding: 20upx 0;
+		height: 400rpx;
+		padding: 20rpx 0;
 		overflow-y: auto;
 		
 		.item{
 			float: left;
 			display: block;
-			height: 60upx;
-			line-height: 60upx;
+			height: 60rpx;
+			line-height: 60rpx;
 			width: calc(100% / 12);
-			margin-right: 20upx;
+			margin-right: 20rpx;
 		}
 	}
 }
 .file{
-	padding: 30upx 20upx;
+	padding: 30rpx 20rpx;
 	
 	.list{
 		overflow: hidden;
-		padding-left: 10upx;
+		padding-left: 10rpx;
 		justify-content: flex-start;
 	}
 	
 	.item{
 		float: left;
-		width: 110upx;
-		height: 110upx;
-		border-radius: 10upx;
-		margin-right: 40upx;
+		width: 110rpx;
+		height: 110rpx;
+		border-radius: 10rpx;
+		margin-right: 40rpx;
 		background-color: #FFF;
 		
 		.icon{
-			width: 50upx;
+			width: 50rpx;
 		}
 		
 		.text{
-			font-size: 24upx;
-			margin-top: 4upx;
+			font-size: 24rpx;
+			margin-top: 4rpx;
 		}
 	}
 }
 .oper{
-	height: 110upx;
-	padding: 0 20upx;
+	height: 110rpx;
+	padding: 0 20rpx;
 	box-sizing: border-box;
-	border-top: 2upx solid #EEE;
-	border-bottom: 2upx solid #EEE;
+	border-top: 2rpx solid #EEE;
+	border-bottom: 2rpx solid #EEE;
 	
 	.input{
-		height: 68upx;
-		line-height: 68upx;
-		padding: 0 20upx;
-		font-size: 28upx;
-		border-radius: 10upx;
+		height: 68rpx;
+		line-height: 68rpx;
+		padding: 0 20rpx;
+		font-size: 28rpx;
+		border-radius: 10rpx;
 		background-color: #fff;
-		width: calc(100% - 120upx - 20upx - 40upx - 60upx);
+		width: calc(100% - 120rpx - 20rpx - 40rpx - 60rpx);
 	}
 	.icon{
-		width: 60upx;
-		height: 60upx;
+		width: 60rpx;
+		height: 60rpx;
 	}
 	.btn{
 		color: #fff;
-		width: 90upx;
-		height: 52upx;
-		font-size: 24upx;
-		line-height: 52upx;
+		width: 90rpx;
+		height: 52rpx;
+		font-size: 24rpx;
+		line-height: 52rpx;
 		text-align: center;
-		border-radius: 10upx;
+		border-radius: 10rpx;
 		background-color: #2BA245;
 	}
 }
 .scroll{
 	overflow-y: auto;
 	transition: all 0.1s ease;
-	height: calc(100vh - 88upx - 110upx - var(--status-bar-height));
+	height: calc(100vh - 88rpx - 110rpx - var(--status-bar-height));
 	
 	/* #ifdef MP-WEIXIN */
-	height: calc(100vh - 88upx - var(--status-bar-height));
+	height: calc(100vh - 88rpx - var(--status-bar-height));
 	/* #endif */
 	/* #ifdef H5 */
-	height: calc(100vh - 88upx - 110upx - var(--status-bar-height));
+	height: calc(100vh - 88rpx - 110rpx - var(--status-bar-height));
 	/* #endif */
 	
 	.item-space{
-		height: 30upx;
+		height: 30rpx;
 	}
 	
 	.time{
 		color: #666;
-		font-size: 24upx;
+		font-size: 24rpx;
 		text-align: center;
-		margin-bottom: 20upx;
+		margin-bottom: 20rpx;
 	}
 	
 	.cancel{
 		width: 100%;
-		height: 40upx;
+		height: 40rpx;
 		text-align: center;
-		margin-bottom: 30upx;
+		margin-bottom: 30rpx;
 		
 		.text{
 			color: #999;
-			font-size: 24upx;
+			font-size: 24rpx;
 		}
 	}
 	
 	.item{
-		margin: 0 30upx 30upx;
+		margin: 0 30rpx 30rpx;
 		align-items: flex-start;
 		justify-content: flex-start;
 		
 		.face{
-			width: 80upx;
-			height: 80upx;
-			border-radius: 10upx;
+			width: 80rpx;
+			height: 80rpx;
+			border-radius: 10rpx;
 		}
 		
 		.content{
 			color: #000;
-			font-size: 32upx;
-			// min-height: 80upx;
-			border-radius: 10upx;
-			padding: 20upx 24upx;
+			font-size: 32rpx;
+			// min-height: 80rpx;
+			border-radius: 10rpx;
+			padding: 20rpx 24rpx;
 			background-color: #fff;
 			word-break: break-all;
 			word-wrap: break-word;
-			max-width: calc(100% - 100upx - 120upx);
+			max-width: calc(100% - 100rpx - 120rpx);
 			position: relative;
 			
 			&::before{
 				content: '';
 				width: 0;
 				height: 0;
-				border-right: 30upx solid #FFF;
-				border-top: 20upx solid transparent;
-				border-bottom: 20upx solid transparent;
+				border-right: 30rpx solid #FFF;
+				border-top: 20rpx solid transparent;
+				border-bottom: 20rpx solid transparent;
 				position: absolute;
-				top: 24upx;
+				top: 24rpx;
 			}
 			
 			.voice-icon{
-				width: 32upx;
-				height: 40upx;
-				margin-right: 180upx;
-				margin-bottom: -8upx;
+				width: 32rpx;
+				height: 40rpx;
+				margin-right: 180rpx;
+				margin-bottom: -8rpx;
 			}
 		}
 		
 		&.left{
 			.face{
-				margin-right: 30upx;
+				margin-right: 30rpx;
 			}
 			.content::before{
-				left: -20upx;
+				left: -20rpx;
 			}
 		}
 		
 		&.right{
 			flex-direction: row-reverse;
 			.face{
-				margin-left: 30upx;
+				margin-left: 30rpx;
 			}
 			.content{
 				background-color: #A0EA6F;
 				
 				&::before{
-					right: -20upx;
+					right: -20rpx;
 					transform: rotate(180deg);
-					border-right: 30upx solid #A0EA6F;
+					border-right: 30rpx solid #A0EA6F;
 				}
 				
 				.voice-icon{
 					margin-right: 0;
-					margin-left: 180upx;
+					margin-left: 180rpx;
 					transform: rotate(180deg);
 				}
 			}
