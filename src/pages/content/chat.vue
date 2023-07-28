@@ -91,8 +91,7 @@
 <script>
 import myVoice from './self-voice.vue'
 import util from '@/static/js/util'
-import request from '@/common/request'
-// import { upload } from '@/network/common'
+import { postMessage } from '@/network/chat';
 const innerAudioContext = uni.createInnerAudioContext()
 const recorderManager = uni.getRecorderManager()
 export default{
@@ -387,8 +386,8 @@ export default{
 			cb ? cb() : this.togglePicker(0, 'file')
 			
 			// var apiUrl = 'voice/all-voice';
-			request(apiUrl);
-			// postMessage(apiUrl);
+			// 发送消息
+			postMessage(apiUrl);
 			// uni.request({
 			// 	url: apiUrl,
 			// 	data: {

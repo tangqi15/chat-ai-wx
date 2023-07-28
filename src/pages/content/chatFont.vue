@@ -16,21 +16,21 @@
           <!-- 聊天记录 -->
           <view v-for="(item, index) in msgList" :key="index">
             <!-- 自己发的消息 -->
-            <view class="item self" v-if="item.userContent != ''">
+            <view class="item self" v-if="item.chatType == 0">
               <!-- 文字内容 -->
               <view class="content right">
-                {{ item.userContent }}
+                {{ item.content }}
               </view>
               <!-- 头像 -->
               <view class="avatar"> </view>
             </view>
             <!-- 机器人发的消息 -->
-            <view class="item Ai" v-if="item.botContent != ''">
+            <view class="item Ai" v-if="item.chatType == 1">
               <!-- 头像 -->
               <view class="avatar"> </view>
               <!-- 文字内容 -->
               <view class="content left">
-                {{ item.botContent }}
+                {{ item.content }}
               </view>
             </view>
           </view>
@@ -49,13 +49,17 @@
             auto-height
           ></textarea>
         </view>
-        <button @click="handleSend" class="send-btn">发送</button>
+        <button @click="handleSend" class="send-btn" :disabled="isCanSend">
+          发送
+        </button>
       </view>
     </view>
   </view>
 </template>
 <script>
 import titleHeader from "@/wxcomponents/common/cus-header.vue";
+import { getChatHistory, postMessage } from "@/network/chat";
+
 export default {
   components: { titleHeader },
   data() {
@@ -63,26 +67,13 @@ export default {
       title: "文字记录",
       //滚动距离
       scrollTop: 0,
-      userId: "",
       //发送的消息
       chatMsg: "",
       // 接口拉取的消息队列
-      msgList: [
-        {
-          botContent: "hello，请问我有什么可以帮助你的吗？",
-          recordId: 0,
-          titleId: 0,
-          userContent: "",
-          userId: 0,
-        },
-        {
-          botContent: "",
-          recordId: 0,
-          titleId: 0,
-          userContent: "你好呀我想问你一件事",
-          userId: 0,
-        },
-      ],
+      msgList: [],
+      isCanSend: false, // 是否可以继续发送
+      userId: "135b4947f1644b76b9d5c614782fc84a",
+      modelId: "64a561d1f51062cd3d0fb178",
     };
   },
   computed: {
@@ -90,7 +81,37 @@ export default {
       return this.rpxTopx(uni.getSystemInfoSync().windowHeight) - 28;
     },
   },
+  mounted() {
+    this.init();
+  },
   methods: {
+    // 初始化调用
+    init() {
+      // 拉取  聊天记录
+      this.getChatHistorys();
+    },
+    async getChatHistorys() {
+      let params = {
+        pageNo: 1,
+        pageSize: 10,
+        param: {
+          userId: this.userId,
+          modelId: this.modelId,
+        },
+      };
+
+      try {
+        getChatHistory(params)
+          .then((data) => {
+            this.msgList = data;
+          })
+          .catch((fail) => {
+            console.log(fail);
+          });
+      } catch (e) {
+        console.log(e, "没有发送成功");
+      }
+    },
     // px转换成rpx
     rpxTopx(px) {
       let deviceWidth = wx.getSystemInfoSync().windowWidth;
@@ -101,18 +122,33 @@ export default {
     handleSend() {
       //如果消息不为空
       if (!this.chatMsg || !/^\s+$/.test(this.chatMsg)) {
-        let obj = {
-          botContent: "",
-          recordId: 0,
-          titleId: 0,
-          userContent: this.chatMsg,
-          userId: 0,
-        };
-        this.msgList.push(obj);
-        this.chatMsg = "";
+        console.log(this.chatMsg, 'this.chatMsg');
+        uni.showToast({
+          title: '发送不能为空',
+          icon: 'error',
+        });
+        return;
       } else {
-        this.$modal.showToast("不能发送空白消息");
+        this.msgList.push({
+          chatType: 0,
+          content: this.chatMsg,
+        });
+        this.chatMsg = "";
       }
+      let param = {
+        sessionChatId: "",
+        userId: this.userId,
+        modelId: this.modelId,
+        message: this.chatMsg,
+      };
+      this.isCanSend = true;
+      postMessage(param).then((data) => {
+        this.chatMsg = "";
+        // 在异步返回之前  不允许继续发送
+        this.msgList.push(data);
+        // 回复的信息
+        this.isCanSend = false;
+      });
     },
   },
 };
@@ -134,14 +170,15 @@ textarea {
 .scrollContent {
   overflow-y: scroll;
   transition: all 0.1s ease;
+  flex: 1;
   // height: 100vh;
   // height: calc(100vh - 88rpx - 110rpx - var(--status-bar-height) + 20rpx);
 
   /* #ifdef MP-WEIXIN */
-  height: calc(100vh - 88rpx - var(--status-bar-height) - 20rpx);
+  // height: calc(100vh - 88rpx - var(--status-bar-height) - 20rpx);
   /* #endif */
   /* #ifdef H5 */
-  height: calc(100vh - 88rpx - 110rpx - var(--status-bar-height));
+  // height: calc(100vh - 88rpx - 110rpx - var(--status-bar-height));
   /* #endif */
 }
 
@@ -149,6 +186,8 @@ textarea {
 .container {
   height: 100vh;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
   .scroll-view {
     ::-webkit-scrollbar {
       display: none;

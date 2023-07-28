@@ -1,3 +1,5 @@
+import request from "@/common/request";
+
 // 模型相关接口
 
 // 新增模型   addModel
@@ -17,13 +19,3 @@ export const updateModel = () => {
     method: "POST",
   });
 };
-
-
-
-// 开启聊天   startChat
-// export const startChat = () => {
-//   request({
-//     url: "/chat/start-chat",
-//     method: "POST",
-//   });
-// };

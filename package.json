@@ -80,6 +80,11 @@
     "vuex": "^3.2.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.22.9",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-transform-runtime": "^7.22.9",
+    "@babel/preset-env": "^7.22.9",
+    "@babel/runtime": "^7.22.6",
     "@dcloudio/types": "^3.3.2",
     "@dcloudio/uni-automator": "^2.0.2-3080720230703001",
     "@dcloudio/uni-cli-i18n": "^2.0.2-3080720230703001",

@@ -1,7 +1,8 @@
 // 环境
 const env = process.env.NODE_ENV;
 
-const base_url = env === 'production' ? '正式域名' : 'https://d3e5-38-107-214-225.ngrok-free.app';
+// https://7083-210-12-115-83.ngrok-free.app
+const base_url = env === 'production' ? '正式域名' : 'https://372a-210-12-115-83.ngrok-free.app';
 
 function getToken() {
 	// getStorage： 从本地缓存 异步获取指定 key 内容
@@ -71,37 +72,28 @@ export default async function request(params, header = null) {
 	// 获取 openid
 	reqHeaders.openid = getOpenid();
 
-	// 请求为什么要往  Promise 里面放
 	return new Promise((resolve, reject) => {
-		let options = {
-			url: '',
-			header: reqHeaders,
-			success: (res) => {
-				const { data } = res;
-				// 成功
-				if (data.code === '0') {
-					resolve(data.data);
-				} else if (data.status === 0) {
-					resolve(data.result);
-				} else if (data.code === '10000') {
-					// 未登录、登录失败
-					// 未请求成功接口缓存， 重新登录， 重新进行接口请求。  调用了好几个接口，重新登录重新请求。
-					// TODO
-
-					// 登录
-					getNewToken();
-				}
-			},
-			fail: (err) => {
-				uni.showToast({
-					title: '请求失败',
-					icon: 'error'
-				});
-				reject(err);
-			}
-		};
-
-		options = Object.assign(options, params);
-		uni.request(options);
-	})
+    let options = {
+      url: '',
+      header: reqHeaders,
+      success: (res) => {
+        const { data } = res;
+        if (data.code === 0) {
+          resolve(data.data);
+        }
+      },
+      fail: (err) => {
+        uni.showToast({
+          title: '请求失败',
+          icon: 'error',
+        });
+        reject(err);
+      },
+    };
+    if (header) {
+      options.header = Object.assign(options.header, header);
+    }
+    options = Object.assign(options, params);
+    uni.request(options);
+  });
 }

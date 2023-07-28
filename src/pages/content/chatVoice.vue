@@ -84,9 +84,8 @@
 <script>
 import myVoice from './self-voice.vue'
 import util from '@/static/js/util'
-import request from '@/common/request'
 import titleHeader from '@/wxcomponents/common/cus-header.vue';
-// import { upload } from '@/network/common'
+import { postVoice } from "@/network/chat";
 const innerAudioContext = uni.createInnerAudioContext()
 // uni  提供的全局录音管理器
 // const recorderManger = uni.getrecorderManger()
@@ -236,10 +235,12 @@ export default{
 			},
 			// 发送语音
 			handleTouchEnd() {
+				console.log('执行到这里了');
 				this.showVoice = false;
 				clearInterval(this.tiemr);
 				recorderManger.stop();
 				recorderManger.onStop((res) => {
+					console.log(res, 'res44444444444444');
 					const message = {
 						id: '1',
 						content: res.tempFilePath,
@@ -257,6 +258,10 @@ export default{
 				this.audioList.push({
 					message,
 					msgType
+				})
+				
+				postVoice().then(() => {
+					
 				})
 			},
 		// 开始录音
