@@ -75,7 +75,6 @@ export default Vue.extend({
       slider: 30, // 滑块
     };
   },
-  onLoad(options) {},
   computed: {
     // 动态图时，需要用 computed 加载
     // bgImage() {

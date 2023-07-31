@@ -56,9 +56,15 @@
     </view>
   </view>
 </template>
-<script>
+<script lang="ts">
 import titleHeader from "@/wxcomponents/common/cus-header.vue";
 import { getChatHistory, postMessage } from "@/network/chat";
+
+interface msgListInter {
+  chatType: number, // 0: 我发送  1： 接收
+  content: string, // 聊天内容
+}
+
 
 export default {
   components: { titleHeader },
@@ -70,14 +76,14 @@ export default {
       //发送的消息
       chatMsg: "",
       // 接口拉取的消息队列
-      msgList: [],
+      msgList: [] as Array<msgListInter>,
       isCanSend: false, // 是否可以继续发送
       userId: "135b4947f1644b76b9d5c614782fc84a",
       modelId: "64a561d1f51062cd3d0fb178",
     };
   },
   computed: {
-    windowHeight() {
+    windowHeight() :any {
       return this.rpxTopx(uni.getSystemInfoSync().windowHeight) - 28;
     },
   },
@@ -102,7 +108,7 @@ export default {
 
       try {
         getChatHistory(params)
-          .then((data) => {
+          .then((data: any) => {
             this.msgList = data;
           })
           .catch((fail) => {
@@ -113,7 +119,7 @@ export default {
       }
     },
     // px转换成rpx
-    rpxTopx(px) {
+    rpxTopx(px: any) {
       let deviceWidth = wx.getSystemInfoSync().windowWidth;
       let rpx = (750 / deviceWidth) * Number(px);
       return Math.floor(rpx);
@@ -142,7 +148,7 @@ export default {
         message: this.chatMsg,
       };
       this.isCanSend = true;
-      postMessage(param).then((data) => {
+      postMessage(param).then((data: any) => {
         this.chatMsg = "";
         // 在异步返回之前  不允许继续发送
         this.msgList.push(data);
