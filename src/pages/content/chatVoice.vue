@@ -35,7 +35,7 @@
 		<!--输入-->
 		<view class="oper flex-row" @tap.prevent.stop="">
 			<view
-			  class="videoChatButton"
+				class="videoChatButton"
 				@touchend="handleTouchEnd"
 				@touchmove="handleTouchMove"
 				@touchstart="handleTouchStart"

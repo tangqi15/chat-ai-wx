@@ -1,0 +1,712 @@
+{
+  "0 debug pnpm:scope": {
+    "selected": 1
+  },
+  "1 debug pnpm:package-manifest": {
+    "initial": {
+      "name": "bus_mini_program",
+      "version": "0.1.0",
+      "private": true,
+      "scripts": {
+        "serve": "npm run pkginstall && npm run dev:mp-weixin",
+        "build": "npm run pkginstall && npm run build:mp-weixin",
+        "build:app-plus": "cross-env NODE_ENV=production UNI_PLATFORM=app-plus vue-cli-service uni-build",
+        "build:custom": "cross-env NODE_ENV=production uniapp-cli custom",
+        "build:h5": "cross-env NODE_ENV=production UNI_PLATFORM=h5 vue-cli-service uni-build",
+        "build:mp-360": "cross-env NODE_ENV=production UNI_PLATFORM=mp-360 vue-cli-service uni-build",
+        "build:mp-alipay": "cross-env NODE_ENV=production UNI_PLATFORM=mp-alipay vue-cli-service uni-build",
+        "build:mp-baidu": "cross-env NODE_ENV=production UNI_PLATFORM=mp-baidu vue-cli-service uni-build",
+        "build:mp-kuaishou": "cross-env NODE_ENV=production UNI_PLATFORM=mp-kuaishou vue-cli-service uni-build",
+        "build:mp-qq": "cross-env NODE_ENV=production UNI_PLATFORM=mp-qq vue-cli-service uni-build",
+        "build:mp-toutiao": "cross-env NODE_ENV=production UNI_PLATFORM=mp-toutiao vue-cli-service uni-build",
+        "build:mp-weixin": "cross-env NODE_ENV=production UNI_PLATFORM=mp-weixin vue-cli-service uni-build",
+        "build:quickapp-native": "cross-env NODE_ENV=production UNI_PLATFORM=quickapp-native vue-cli-service uni-build",
+        "build:quickapp-webview": "cross-env NODE_ENV=production UNI_PLATFORM=quickapp-webview vue-cli-service uni-build",
+        "build:quickapp-webview-huawei": "cross-env NODE_ENV=production UNI_PLATFORM=quickapp-webview-huawei vue-cli-service uni-build",
+        "build:quickapp-webview-union": "cross-env NODE_ENV=production UNI_PLATFORM=quickapp-webview-union vue-cli-service uni-build",
+        "dev:app-plus": "cross-env NODE_ENV=development UNI_PLATFORM=app-plus vue-cli-service uni-build --watch",
+        "dev:custom": "cross-env NODE_ENV=development uniapp-cli custom",
+        "dev:h5": "cross-env NODE_ENV=development UNI_PLATFORM=h5 vue-cli-service uni-serve",
+        "dev:mp-360": "cross-env NODE_ENV=development UNI_PLATFORM=mp-360 vue-cli-service uni-build --watch",
+        "dev:mp-alipay": "cross-env NODE_ENV=development UNI_PLATFORM=mp-alipay vue-cli-service uni-build --watch",
+        "dev:mp-baidu": "cross-env NODE_ENV=development UNI_PLATFORM=mp-baidu vue-cli-service uni-build --watch",
+        "dev:mp-kuaishou": "cross-env NODE_ENV=development UNI_PLATFORM=mp-kuaishou vue-cli-service uni-build --watch",
+        "dev:mp-qq": "cross-env NODE_ENV=development UNI_PLATFORM=mp-qq vue-cli-service uni-build --watch",
+        "dev:mp-toutiao": "cross-env NODE_ENV=development UNI_PLATFORM=mp-toutiao vue-cli-service uni-build --watch",
+        "dev:mp-weixin": "cross-env NODE_ENV=development UNI_PLATFORM=mp-weixin vue-cli-service uni-build --watch",
+        "dev:quickapp-native": "cross-env NODE_ENV=development UNI_PLATFORM=quickapp-native vue-cli-service uni-build --watch",
+        "dev:quickapp-webview": "cross-env NODE_ENV=development UNI_PLATFORM=quickapp-webview vue-cli-service uni-build --watch",
+        "dev:quickapp-webview-huawei": "cross-env NODE_ENV=development UNI_PLATFORM=quickapp-webview-huawei vue-cli-service uni-build --watch",
+        "dev:quickapp-webview-union": "cross-env NODE_ENV=development UNI_PLATFORM=quickapp-webview-union vue-cli-service uni-build --watch",
+        "info": "node node_modules/@dcloudio/vue-cli-plugin-uni/commands/info.js",
+        "serve:quickapp-native": "node node_modules/@dcloudio/uni-quickapp-native/bin/serve.js",
+        "test:android": "cross-env UNI_PLATFORM=app-plus UNI_OS_NAME=android jest -i",
+        "test:h5": "cross-env UNI_PLATFORM=h5 jest -i",
+        "test:ios": "cross-env UNI_PLATFORM=app-plus UNI_OS_NAME=ios jest -i",
+        "test:mp-baidu": "cross-env UNI_PLATFORM=mp-baidu jest -i",
+        "test:mp-weixin": "cross-env UNI_PLATFORM=mp-weixin jest -i",
+        "pkginstall": "node pkg-install",
+        "ic": "tnpm i && npm run pkginstall",
+        "lint": "eslint --fix --ext .js,.vue,.ts"
+      },
+      "dependencies": {
+        "@dcloudio/uni-app-plus": "^2.0.0-32920211029001",
+        "@dcloudio/uni-h5": "^2.0.0-32920211029001",
+        "@dcloudio/uni-helper-json": "*",
+        "@dcloudio/uni-i18n": "^2.0.0-32920211029001",
+        "@dcloudio/uni-mp-360": "^2.0.0-32920211029001",
+        "@dcloudio/uni-mp-alipay": "^2.0.0-32920211029001",
+        "@dcloudio/uni-mp-baidu": "^2.0.0-32920211029001",
+        "@dcloudio/uni-mp-kuaishou": "^2.0.0-32920211029001",
+        "@dcloudio/uni-mp-qq": "^2.0.0-32920211029001",
+        "@dcloudio/uni-mp-toutiao": "^2.0.0-32920211029001",
+        "@dcloudio/uni-mp-vue": "^2.0.0-32920211029001",
+        "@dcloudio/uni-mp-weixin": "^2.0.0-32920211029001",
+        "@dcloudio/uni-quickapp-native": "^2.0.0-32920211029001",
+        "@dcloudio/uni-quickapp-webview": "^2.0.0-32920211029001",
+        "@dcloudio/uni-stat": "^2.0.0-32920211029001",
+        "@vant/weapp": "^1.9.0",
+        "@vue/shared": "^3.0.0",
+        "core-js": "^3.6.5",
+        "flyio": "^0.6.2",
+        "regenerator-runtime": "^0.12.1",
+        "vue": "^2.6.11",
+        "vue-class-component": "^6.3.2",
+        "vue-property-decorator": "^8.0.0",
+        "vuex": "^3.2.0"
+      },
+      "devDependencies": {
+        "@babel/plugin-syntax-typescript": "^7.2.0",
+        "@babel/runtime": "~7.12.0",
+        "@dcloudio/types": "*",
+        "@dcloudio/uni-automator": "^2.0.0-32920211029001",
+        "@dcloudio/uni-cli-i18n": "^2.0.0-32920211029001",
+        "@dcloudio/uni-cli-shared": "^2.0.0-32920211029001",
+        "@dcloudio/uni-migration": "^2.0.0-32920211029001",
+        "@dcloudio/uni-template-compiler": "^2.0.0-32920211029001",
+        "@dcloudio/vue-cli-plugin-hbuilderx": "^2.0.0-32920211029001",
+        "@dcloudio/vue-cli-plugin-uni": "^2.0.0-32920211029001",
+        "@dcloudio/vue-cli-plugin-uni-optimize": "^2.0.0-32920211029001",
+        "@dcloudio/webpack-uni-mp-loader": "^2.0.0-32920211029001",
+        "@dcloudio/webpack-uni-pages-loader": "^2.0.0-32920211029001",
+        "@tencent/eslint-config-tencent": "^0.16.0",
+        "@types/node": "^16.11.11",
+        "@types/webpack-env": "^1.16.3",
+        "@typescript-eslint/eslint-plugin": "^5.7.0",
+        "@typescript-eslint/parser": "^5.7.0",
+        "@vue/cli-plugin-babel": "~4.5.0",
+        "@vue/cli-plugin-typescript": "*",
+        "@vue/cli-service": "~4.5.0",
+        "across-env": "^2.0.2",
+        "babel-plugin-import": "^1.11.0",
+        "cross-env": "^7.0.3",
+        "eslint": "^8.4.1",
+        "eslint-plugin-prettier": "^4.0.0",
+        "eslint-plugin-vue": "^8.1.1",
+        "jest": "^25.4.0",
+        "mini-types": "*",
+        "miniprogram-api-typings": "^3.4.4",
+        "postcss-comment": "^2.0.0",
+        "prettier": "^2.5.1",
+        "sass": "^1.45.0",
+        "typescript": "^3.0.0",
+        "vue-eslint-parser": "^8.0.1",
+        "vue-template-compiler": "^2.6.11"
+      },
+      "browserslist": [
+        "Android >= 4.4",
+        "ios >= 9"
+      ],
+      "uni-app": {
+        "scripts": {}
+      }
+    },
+    "prefix": "/Users/workSpace/my-weixin/my-vue2-wx"
+  },
+  "2 debug pnpm:context": {
+    "currentLockfileExists": false,
+    "storeDir": "/Users/tangqi/.pnpm-store/v3",
+    "virtualStoreDir": "/Users/workSpace/my-weixin/my-vue2-wx/node_modules/.pnpm"
+  },
+  "3 debug pnpm:stage": {
+    "prefix": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "stage": "resolution_started"
+  },
+  "4 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/@types/webpack-env/1.18.1",
+    "wanted": {
+      "dependentId": ".",
+      "name": "@types/webpack-env",
+      "rawSpec": "^1.16.3"
+    }
+  },
+  "5 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@types/webpack-env/1.18.1",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "6 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@types/webpack-env/1.18.1",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "7 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/@babel/plugin-syntax-typescript/7.22.5",
+    "wanted": {
+      "dependentId": ".",
+      "name": "@babel/plugin-syntax-typescript",
+      "rawSpec": "^7.2.0"
+    }
+  },
+  "8 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@babel/plugin-syntax-typescript/7.22.5",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "9 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@babel/plugin-syntax-typescript/7.22.5",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "10 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/@babel/runtime/7.12.18",
+    "wanted": {
+      "dependentId": ".",
+      "name": "@babel/runtime",
+      "rawSpec": "~7.12.0"
+    }
+  },
+  "11 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@babel/runtime/7.12.18",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "12 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@babel/runtime/7.12.18",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "13 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/@vue/cli-plugin-babel/4.5.19",
+    "wanted": {
+      "dependentId": ".",
+      "name": "@vue/cli-plugin-babel",
+      "rawSpec": "~4.5.0"
+    }
+  },
+  "14 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@vue/cli-plugin-babel/4.5.19",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "15 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@vue/cli-plugin-babel/4.5.19",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "16 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/@dcloudio/types/3.3.3",
+    "wanted": {
+      "dependentId": ".",
+      "name": "@dcloudio/types",
+      "rawSpec": "*"
+    }
+  },
+  "17 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@dcloudio/types/3.3.3",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "18 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@dcloudio/types/3.3.3",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "19 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/@vue/cli-plugin-typescript/5.0.8",
+    "wanted": {
+      "dependentId": ".",
+      "name": "@vue/cli-plugin-typescript",
+      "rawSpec": "*"
+    }
+  },
+  "20 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@vue/cli-plugin-typescript/5.0.8",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "21 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@vue/cli-plugin-typescript/5.0.8",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "22 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/across-env/2.0.2",
+    "wanted": {
+      "dependentId": ".",
+      "name": "across-env",
+      "rawSpec": "^2.0.2"
+    }
+  },
+  "23 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/across-env/2.0.2",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "24 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/across-env/2.0.2",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "25 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/babel-plugin-import/1.13.8",
+    "wanted": {
+      "dependentId": ".",
+      "name": "babel-plugin-import",
+      "rawSpec": "^1.11.0"
+    }
+  },
+  "26 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/babel-plugin-import/1.13.8",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "27 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/babel-plugin-import/1.13.8",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "28 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/cross-env/7.0.3",
+    "wanted": {
+      "dependentId": ".",
+      "name": "cross-env",
+      "rawSpec": "^7.0.3"
+    }
+  },
+  "29 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/cross-env/7.0.3",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "30 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/cross-env/7.0.3",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "31 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/@dcloudio/uni-cli-i18n/2.0.0-alpha-33020211130001",
+    "wanted": {
+      "dependentId": ".",
+      "name": "@dcloudio/uni-cli-i18n",
+      "rawSpec": "^2.0.0-32920211029001"
+    }
+  },
+  "32 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@dcloudio/uni-cli-i18n/2.0.0-alpha-33020211130001",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "33 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@dcloudio/uni-cli-i18n/2.0.0-alpha-33020211130001",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "34 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/@dcloudio/uni-template-compiler/2.0.0-alpha-33020211130001",
+    "wanted": {
+      "dependentId": ".",
+      "name": "@dcloudio/uni-template-compiler",
+      "rawSpec": "^2.0.0-32920211029001"
+    }
+  },
+  "35 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@dcloudio/uni-template-compiler/2.0.0-alpha-33020211130001",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "36 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@dcloudio/uni-template-compiler/2.0.0-alpha-33020211130001",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "37 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/eslint-plugin-prettier/4.2.1",
+    "wanted": {
+      "dependentId": ".",
+      "name": "eslint-plugin-prettier",
+      "rawSpec": "^4.0.0"
+    }
+  },
+  "38 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/eslint-plugin-prettier/4.2.1",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "39 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/eslint-plugin-prettier/4.2.1",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "40 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/eslint/8.46.0",
+    "wanted": {
+      "dependentId": ".",
+      "name": "eslint",
+      "rawSpec": "^8.4.1"
+    }
+  },
+  "41 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/eslint/8.46.0",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "42 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/eslint/8.46.0",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "43 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/mini-types/0.1.7",
+    "wanted": {
+      "dependentId": ".",
+      "name": "mini-types",
+      "rawSpec": "*"
+    }
+  },
+  "44 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/mini-types/0.1.7",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "45 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/mini-types/0.1.7",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "46 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/eslint-plugin-vue/8.7.1",
+    "wanted": {
+      "dependentId": ".",
+      "name": "eslint-plugin-vue",
+      "rawSpec": "^8.1.1"
+    }
+  },
+  "47 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/eslint-plugin-vue/8.7.1",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "48 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/eslint-plugin-vue/8.7.1",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "49 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/miniprogram-api-typings/3.10.0",
+    "wanted": {
+      "dependentId": ".",
+      "name": "miniprogram-api-typings",
+      "rawSpec": "^3.4.4"
+    }
+  },
+  "50 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/miniprogram-api-typings/3.10.0",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "51 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/miniprogram-api-typings/3.10.0",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "52 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/@vue/cli-service/4.5.19",
+    "wanted": {
+      "dependentId": ".",
+      "name": "@vue/cli-service",
+      "rawSpec": "~4.5.0"
+    }
+  },
+  "53 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@vue/cli-service/4.5.19",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "54 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@vue/cli-service/4.5.19",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "55 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/postcss-comment/2.0.0",
+    "wanted": {
+      "dependentId": ".",
+      "name": "postcss-comment",
+      "rawSpec": "^2.0.0"
+    }
+  },
+  "56 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/postcss-comment/2.0.0",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "57 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/postcss-comment/2.0.0",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "58 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/@dcloudio/webpack-uni-mp-loader/2.0.0-alpha-33020211130001",
+    "wanted": {
+      "dependentId": ".",
+      "name": "@dcloudio/webpack-uni-mp-loader",
+      "rawSpec": "^2.0.0-32920211029001"
+    }
+  },
+  "59 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@dcloudio/webpack-uni-mp-loader/2.0.0-alpha-33020211130001",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "60 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@dcloudio/webpack-uni-mp-loader/2.0.0-alpha-33020211130001",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "61 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/@dcloudio/webpack-uni-pages-loader/2.0.0-alpha-33020211130001",
+    "wanted": {
+      "dependentId": ".",
+      "name": "@dcloudio/webpack-uni-pages-loader",
+      "rawSpec": "^2.0.0-32920211029001"
+    }
+  },
+  "62 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@dcloudio/webpack-uni-pages-loader/2.0.0-alpha-33020211130001",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "63 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/prettier/2.8.8",
+    "wanted": {
+      "dependentId": ".",
+      "name": "prettier",
+      "rawSpec": "^2.5.1"
+    }
+  },
+  "64 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/prettier/2.8.8",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "65 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@dcloudio/webpack-uni-pages-loader/2.0.0-alpha-33020211130001",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "66 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/prettier/2.8.8",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "67 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/vue-eslint-parser/8.3.0",
+    "wanted": {
+      "dependentId": ".",
+      "name": "vue-eslint-parser",
+      "rawSpec": "^8.0.1"
+    }
+  },
+  "68 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/vue-eslint-parser/8.3.0",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "69 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/vue-eslint-parser/8.3.0",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "70 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/vue-template-compiler/2.7.14",
+    "wanted": {
+      "dependentId": ".",
+      "name": "vue-template-compiler",
+      "rawSpec": "^2.6.11"
+    }
+  },
+  "71 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/vue-template-compiler/2.7.14",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "72 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/vue-template-compiler/2.7.14",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "73 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/@dcloudio/vue-cli-plugin-uni-optimize/2.0.0-alpha-33020211130001",
+    "wanted": {
+      "dependentId": ".",
+      "name": "@dcloudio/vue-cli-plugin-uni-optimize",
+      "rawSpec": "^2.0.0-32920211029001"
+    }
+  },
+  "74 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@dcloudio/vue-cli-plugin-uni-optimize/2.0.0-alpha-33020211130001",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "75 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/@dcloudio/uni-migration/2.0.0-alpha-33020211130001",
+    "wanted": {
+      "dependentId": ".",
+      "name": "@dcloudio/uni-migration",
+      "rawSpec": "^2.0.0-32920211029001"
+    }
+  },
+  "76 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@dcloudio/uni-migration/2.0.0-alpha-33020211130001",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "77 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/jest/25.5.4",
+    "wanted": {
+      "dependentId": ".",
+      "name": "jest",
+      "rawSpec": "^25.4.0"
+    }
+  },
+  "78 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/jest/25.5.4",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "79 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/@dcloudio/uni-helper-json/1.0.13",
+    "wanted": {
+      "dependentId": ".",
+      "name": "@dcloudio/uni-helper-json",
+      "rawSpec": "*"
+    }
+  },
+  "80 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@dcloudio/uni-helper-json/1.0.13",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "81 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@dcloudio/vue-cli-plugin-uni-optimize/2.0.0-alpha-33020211130001",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "82 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@dcloudio/uni-migration/2.0.0-alpha-33020211130001",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "83 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/jest/25.5.4",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "84 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@dcloudio/uni-helper-json/1.0.13",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "85 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/@dcloudio/vue-cli-plugin-hbuilderx/2.0.0-alpha-33020211130001",
+    "wanted": {
+      "dependentId": ".",
+      "name": "@dcloudio/vue-cli-plugin-hbuilderx",
+      "rawSpec": "^2.0.0-32920211029001"
+    }
+  },
+  "86 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@dcloudio/vue-cli-plugin-hbuilderx/2.0.0-alpha-33020211130001",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "87 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@dcloudio/vue-cli-plugin-hbuilderx/2.0.0-alpha-33020211130001",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "88 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/sass/1.64.1",
+    "wanted": {
+      "dependentId": ".",
+      "name": "sass",
+      "rawSpec": "^1.45.0"
+    }
+  },
+  "89 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/sass/1.64.1",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "90 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/sass/1.64.1",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "91 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/@types/node/16.18.39",
+    "wanted": {
+      "dependentId": ".",
+      "name": "@types/node",
+      "rawSpec": "^16.11.11"
+    }
+  },
+  "92 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@types/node/16.18.39",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "93 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@types/node/16.18.39",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "94 debug pnpm:_dependency_resolved": {
+    "resolution": "registry.npmmirror.com/@dcloudio/uni-app-plus/2.0.0-alpha-33020211130001",
+    "wanted": {
+      "dependentId": ".",
+      "name": "@dcloudio/uni-app-plus",
+      "rawSpec": "^2.0.0-32920211029001"
+    }
+  },
+  "95 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@dcloudio/uni-app-plus/2.0.0-alpha-33020211130001",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "resolved"
+  },
+  "96 debug pnpm:progress": {
+    "packageId": "registry.npmmirror.com/@dcloudio/uni-app-plus/2.0.0-alpha-33020211130001",
+    "requester": "/Users/workSpace/my-weixin/my-vue2-wx",
+    "status": "found_in_store"
+  },
+  "97 error pnpm": {
+    "code": "ERR_PNPM_FETCH_404",
+    "hint": "@tencent/eslint-config-tencent is not in the npm registry, or you have no permission to fetch it.\n\nNo authorization header was set for the request.",
+    "request": {
+      "url": "https://registry.npmmirror.com/@tencent%2Feslint-config-tencent"
+    },
+    "response": {
+      "size": 0,
+      "timeout": 60000
+    },
+    "pkgName": "@tencent/eslint-config-tencent",
+    "pkgsStack": [],
+    "err": {
+      "name": "Error",
+      "message": "GET https://registry.npmmirror.com/@tencent%2Feslint-config-tencent: Not Found - 404",
+      "code": "ERR_PNPM_FETCH_404",
+      "stack": "Error: GET https://registry.npmmirror.com/@tencent%2Feslint-config-tencent: Not Found - 404\n    at RetryOperation._fn (/Users/tangqi/.node/corepack/pnpm/6.11.0/dist/pnpm.cjs:79604:18)\n    at runMicrotasks (<anonymous>)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)"
+    }
+  }
+}

@@ -57,6 +57,7 @@
   </view>
 </template>
 <script lang="ts">
+import Vue from "vue";
 import titleHeader from "@/wxcomponents/common/cus-header.vue";
 import { getChatHistory, postMessage } from "@/network/chat";
 
@@ -65,8 +66,8 @@ interface msgListInter {
   content: string, // 聊天内容
 }
 
-
-export default {
+// 装饰器方式
+export default Vue.extend({
   components: { titleHeader },
   data() {
     return {
@@ -157,7 +158,7 @@ export default {
       });
     },
   },
-};
+});
 </script>
 <style lang="scss" scoped>
 $chatContentbgc: #c2dcff;
