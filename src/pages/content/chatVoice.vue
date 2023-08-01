@@ -133,20 +133,19 @@ const innerAudioContext = uni.createInnerAudioContext();
 // const recorderManger = uni.getrecorderManger()
 const recorderManger = uni.getRecorderManager();
 
-
 // interface optionType {
 //   toUserName: string;
 //   toUserId: string;
 // }
 interface audioListItem {
-  msgType: string,
-  source: string,
-  toUserFace?: string,
-  userFace?: string,
+  msgType: string;
+  source: string;
+  toUserFace?: string;
+  userFace?: string;
   message: {
-    id: string,
-    content: string, // 聊天内容
-  }
+    id: string;
+    content: string; // 聊天内容
+  };
 }
 
 export default Vue.extend({
@@ -186,8 +185,8 @@ export default Vue.extend({
         this.statusBarHeight = res.statusBarHeight || 0;
       },
     });
-      // 获取消息记录
-      this.getList();
+    // 获取消息记录
+    this.getList();
   },
   methods: {
     // 初始化滚动
@@ -216,8 +215,7 @@ export default Vue.extend({
     },
     handleTouchStart(e: any) {
       this.showVoice = true; // 打开语音 弹窗
-      console.log(this.showVoice, "this.showVoice");
-      recorderManger.start({format: 'mp3'});
+      recorderManger.start({ format: "mp3" });
       this.length = 1;
       // 位置  用来判断  滑动到哪里， 取消发送语音
       this.startX = e.touches[0].pageX;
@@ -260,12 +258,15 @@ export default Vue.extend({
     },
     // 语音 处理  发送接口
     pushMessage(message: any, msgType: any) {
+      // 上传文件
+      // this.uploadFile(message);
+
       let param = {
         msgType,
         source: this.fromUserId,
         userFace: uni.getStorageSync("userFace"),
-        toUserFace: '',
-        message
+        toUserFace: "",
+        message,
       };
       this.audioList.push(param);
 
@@ -274,10 +275,23 @@ export default Vue.extend({
       // 接口
       // postVoice().then(() => {});
     },
+    // uploadFile(message) {
+    //   let token = uni.getStorageasync("token");
+    //   uni.uploadFile({
+    //     url: "resume/voiceToText",
+    //     name: "file",
+    //     filePath: this.voicePath,
+    //     header: {
+    //       Authorization: `bearer ${token}`,
+    //     },
+    //     success: (res: any) => {},
+    //     fail: (err: any) => {},
+    //   });
+    // },
     // 开始录音
     startVoice() {
       this.showVoice = true;
-      recorderManger.start({format: 'mp3'});
+      recorderManger.start({ format: "mp3" });
     },
     // 结束录音
     endVoice() {

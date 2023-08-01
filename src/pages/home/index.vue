@@ -9,44 +9,54 @@
       <!-- 人物参数 -->
       <view class="characterProperty">
         <view v-if="registerShow">
-          <van-field name="radio" label="性别">
-            <template #input>
-              <van-radio-group v-model="radio" direction="horizontal">
-                <van-radio name="1">男</van-radio>
-                <van-radio name="2">女</van-radio>
-              </van-radio-group>
-            </template>
-          </van-field>
-          <van-field name="radio" label="性别">
-            <template #input>
-              <van-radio-group v-model="radio" direction="horizontal">
-                <van-radio name="1">男</van-radio>
-                <van-radio name="2">女</van-radio>
-              </van-radio-group>
-            </template>
-          </van-field>
-          <van-field name="radio" label="性别">
-            <template #input>
-              <van-radio-group v-model="radio" direction="horizontal">
-                <van-radio name="1">男</van-radio>
-                <van-radio name="2">女</van-radio>
-              </van-radio-group>
-            </template>
-          </van-field>
-          <!-- 				<view>
-					<span>年龄:</span>
-					{{slider}}
-				</view>
-				<van-slider v-model="slider" active-color="#ee0a24" bar-height="4px" :min="0" :max="50"
-					@change="onChange">
-					<template #button>
-						<view class="custom-button">{{ slider }}</view>
-					</template>
-				</van-slider> -->
-          <view class="characterButton">
+          <view>
+            <view class="propItemClass">
+              <view class="" hover-class="none" hover-stop-propagation="false">
+                性别：
+              </view>
+              <image class="rowImage" src="@/static/img/face.png"></image>
+              <view class="rowSlider" hover-class="none" hover-stop-propagation="false">
+                  <van-slider v-model="slider" active-color="#ee0a24" bar-height="4px" :min="0" :max="50"
+                      @change="onChange">
+                  </van-slider>
+              </view>
+              <view>
+                {{ slider }}
+              </view>
+            </view>
+            <view class="propItemClass">
+              <view class="" hover-class="none" hover-stop-propagation="false">
+                年龄：
+              </view>
+              <image class="rowImage" src="@/static/img/face.png"></image>
+              <view class="rowSlider" hover-class="none" hover-stop-propagation="false">
+                  <van-slider v-model="slider" active-color="#ee0a24" bar-height="4px" :min="0" :max="50"
+                      @change="onChange">
+                  </van-slider>
+              </view>
+              <view>
+                {{ slider }}
+              </view>
+            </view>
+          </view>
+          <view class="propItemClass">
+              <view class="" hover-class="none" hover-stop-propagation="false">
+                年龄：
+              </view>
+              <image class="rowImage" src="@/static/img/face.png"></image>
+              <view class="rowSlider" hover-class="none" hover-stop-propagation="false">
+                  <van-slider v-model="slider" active-color="#ee0a24" bar-height="4px" :min="0" :max="50"
+                      @change="onChange">
+                  </van-slider>
+              </view>
+              <view>
+                {{ slider }}
+              </view>
+            </view>
+            <view class="characterButton">
             <van-button size="mini" type="info">确定</van-button>
           </view>
-        </view>
+          </view>
       </view>
     </view>
     <!-- <tabBar :active="0"></tabBar> -->
@@ -59,10 +69,10 @@
 
 <script lang="ts">
 import Vue from "vue";
-import tabBar from "@/wxcomponents/common/tab-bar.vue";
+// import tabBar from "@/wxcomponents/common/tab-bar.vue";
 export default Vue.extend({
   components: {
-    tabBar,
+    // tabBar,
   },
   data() {
     return {
@@ -72,6 +82,7 @@ export default Vue.extend({
       img: "",
       registerShow: false,
       radio: "1",
+			fromUserFace: uni.getStorageSync('userFace'),
       slider: 30, // 滑块
     };
   },
@@ -89,6 +100,7 @@ export default Vue.extend({
     },
     onChange(value: any) {
       this.slider = value.detail;
+      console.log(this.slider, 'this.slider');
     },
     // 文字聊天
     chatFont() {
@@ -126,7 +138,7 @@ export default Vue.extend({
 
 // 人物参数
 .characterProperty {
-	margin-top: 5vh;
+	margin-top: 60vh;
   // background-color: red;
 }
 // 人物参数 确认
@@ -143,6 +155,7 @@ export default Vue.extend({
   line-height: 18px;
   text-align: center;
   border-radius: 100px;
+  background-color: green;
 }
 
 
@@ -150,5 +163,21 @@ export default Vue.extend({
 .footButton {
   display: flex;
   justify-content: space-between;
+}
+
+.propItemClass {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 30rpx;
+}
+.rowImage {
+  width: 80rpx;
+  height: 80rpx;
+  border-radius: 10rpx;
+}
+.rowSlider {
+  flex: 1;
+  margin: 0rpx 40rpx;
 }
 </style>

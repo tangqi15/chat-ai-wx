@@ -101,13 +101,13 @@
   </view>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from "vue";
-import tabBar from "@/wxcomponents/common/tab-bar.vue";
+// import tabBar from "@/wxcomponents/common/tab-bar.vue";
 import titleHeader from "@/wxcomponents/common/cus-header.vue";
 export default Vue.extend({
   components: {
-    tabBar,
+    // tabBar,
     titleHeader,
   },
   data() {
@@ -126,7 +126,7 @@ export default Vue.extend({
       inputValue: "",
     };
   },
-  onLoad(options) {
+  onLoad() {
     // uni  提供的全局录音管理器
     this.recorderManger = uni.getRecorderManager();
 
@@ -240,7 +240,7 @@ export default Vue.extend({
     focusTextarea(e) {
       this.inputBottom = e.detail.height;
     },
-    blurTextarea(e) {
+    blurTextarea() {
       this.inputBottom = 0;
     },
   },
@@ -286,10 +286,6 @@ export default Vue.extend({
   justify-content: space-around;
 }
 
-/* .image-img {
-	  width: 100%;
-	  height: 100%;
-	} */
 .custom-button {
   width: 26px;
   color: #fff;

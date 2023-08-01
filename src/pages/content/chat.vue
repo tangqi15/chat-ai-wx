@@ -91,7 +91,7 @@
 <script>
 import myVoice from './self-voice.vue'
 import util from '@/static/js/util'
-import { postMessage } from '@/network/chat';
+// import { postMessage } from '@/network/chat';
 const innerAudioContext = uni.createInnerAudioContext()
 const recorderManager = uni.getRecorderManager()
 export default{
@@ -137,7 +137,7 @@ export default{
 		})
 		
 		// 结束播放
-		innerAudioContext.onEnded(res=>{
+		innerAudioContext.onEnded(() => {
 			this.voicePlayingId = ''
 		})
 		
@@ -247,7 +247,7 @@ export default{
 		upload(filePath){
 			this.util.loading('上传中')
 			// 上传路劲  TODO
-			url = '';
+			let url = '';
 			uni.uploadFile({
 				url: url,
 				name: 'file',
@@ -256,12 +256,12 @@ export default{
 					userId: this.fromUserId
 				},
 				header: this.util.getHeader(),
-				success: res=>{
+				success: (res)=>{
 					uni.hideLoading()
 					let data = JSON.parse(res.data)
 					this.pushMessage(data.data, 'voice')
 				},
-				fail: err=>{
+				fail: ()=>{
 					uni.hideLoading()
 				}
 			})
@@ -294,7 +294,7 @@ export default{
 			
 			uni.sendSocketMessage({
 				data: JSON.stringify(data),
-				success: res=>{
+				success: ()=>{
 					// 撤销本地消息
 					this.list = this.list.map(item=>{
 						item.type = item.id == msg.id ? 'cancel' : item.type
@@ -345,7 +345,7 @@ export default{
 								let data = JSON.parse(uploadRes.data)
 								this.pushMessage(data.data, 'image')
 							},
-							fail: err=>{
+							fail: ()=>{
 								uni.hideLoading()
 							}
 						})
@@ -387,38 +387,6 @@ export default{
 			
 			// var apiUrl = 'voice/all-voice';
 			// 发送消息
-			postMessage(apiUrl);
-			// uni.request({
-			// 	url: apiUrl,
-			// 	data: {
-			// 		"key": 'free',
-			// 		"msg": encodeURI(content),
-			// 		"appid": 'wx07c87b31ee791408'
-			// 	},
-			// 	success: (res) => {
-			// 		console.log('request success:', res);
-			// 		// 加入信息
-			// 		this.list.push({
-			// 			source: this.fromUserId+1,
-			// 			target: this.toUserId,
-			// 			content: res.data.content,
-			// 			userFace: uni.getStorageSync('userFace'),
-			// 			type: 'single',
-			// 			msgType: type
-			// 		})
-					
-			// 		// 初始化滚动条
-			// 		this.initScrollBar()
-			// 		cb ? cb() : this.togglePicker(0, 'file')
-			// 	},
-			// 	fail: (err) => {
-			// 		console.log('request fail333', err);
-			// 		uni.showModal({
-			// 			content: err.errMsg,
-			// 			showCancel: false
-			// 		})
-			// 	}
-			// });
 		},
 		// 获取记录
 		getList(){

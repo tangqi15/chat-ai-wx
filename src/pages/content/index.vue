@@ -24,7 +24,7 @@
 	</view>
 </template>
 
-<script>
+<script lang="ts">
 	import Vue from 'vue';
 	import titleHeader from '@/wxcomponents/common/cus-header.vue';
 	import tabBar from '@/wxcomponents/common/tab-bar.vue';
@@ -51,10 +51,10 @@
 		},
 		methods: {
 			// 进入聊天详情
-			openDetail(item) {
+			openDetail(item: any) {
 				console.log(item, 'item');
 				// 通过id  查询语音列表
-			  uni.navigateTo({ url: `/pages/content/chatDetail?data=${item.id}` });
+				uni.navigateTo({ url: `/pages/content/chatDetail?data=${item.id}` });
 			}
 		}
 	})

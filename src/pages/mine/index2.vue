@@ -99,7 +99,7 @@
     <view class="card mr32 ml32 p36">
       <view class="jus-between ali-center">
         <text class="font34 bold">我的助手</text>
-        <view class="font24 col-grey" @click="routerToConfigViews(operations[5].operationContents[0])">{{ operations[5].operationContents[0].content || '' }} <van-icon name="arrow" size="28rpx" /> </view>
+        <view class="font24 col-grey" @click="routerToConfigViews()">{{ operations[5].operationContents[0].content || '' }} <van-icon name="arrow" size="28rpx" /> </view>
       </view>
       <view class="flex flex-column">
         <scroll-view class="pt10 honor-icons" scroll-x enhanced :show-scrollbar="false"
@@ -197,24 +197,10 @@ export default Vue.extend({
   computed: {
     ...mapGetters(['userBasicInfo', 'operations']),
   },
-  onLoad() {
-    getMySeasonCredits()
-      .then((res: any) => {
-        this.myInfo = res || {};
-        this.activeIconIndex = +this.myInfo.honorPictureName.slice(5);
-      });
-    getTotalIncome().then((res: any) => {
-      this.totalIncome = res;
-    });
-  },
-  onShow() {
-    // 获取我的积分
-    getMyScoreBalance().then((res: any) => {
-      this.myScore = res || 0;
-    });
+  mounted() {
   },
   methods: {
-    routerToConfigViews,
+    routerToConfigViews() {},
     toChildrenPages() {
       uni.showToast({
         title: '功能暂未开通！',
@@ -228,7 +214,7 @@ export default Vue.extend({
       });
     },
     // 复制
-    copy(val: String) {
+    copy(val: any) {
       let data = this.userBasicInfo.recommendationCode; // 我的推荐码
       if (val === '0') {
         data = '572596123'; //  QQ群
