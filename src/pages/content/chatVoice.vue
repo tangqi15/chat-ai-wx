@@ -10,7 +10,7 @@
       >
         <view class="item-space"></view>
         <!-- <view class="time">晚上 10:04</view> -->
-        <view v-if="audioList.length" v-for="(item, index) in audioList" :key="index">
+        <view v-for="(item, index) in audioList" :key="index">
           <!--撤销-->
           <view v-if="item.msgType == 'cancel'" class="cancel">
             <text v-if="item.source == fromUserId" class="text"
@@ -65,7 +65,7 @@
       </scroll-view>
     </view>
     <!--输入-->
-    <view class="oper flex-row" @tap.prevent.stop="">
+    <view class="oper flex-row">
       <view
         class="videoChatButton"
         @touchend="handleTouchEnd"
@@ -126,15 +126,27 @@ import Vue from "vue";
 // import myVoice from "./self-voice.vue";
 // import util from "@/static/js/util";
 import titleHeader from "@/wxcomponents/common/cus-header.vue";
-import { postVoice } from "@/network/chat";
+// import { postVoice } from "@/network/chat";
+
 const innerAudioContext = uni.createInnerAudioContext();
 // uni  提供的全局录音管理器
 // const recorderManger = uni.getrecorderManger()
 const recorderManger = uni.getRecorderManager();
 
-interface optionType {
-  toUserName: string;
-  toUserId: string;
+
+// interface optionType {
+//   toUserName: string;
+//   toUserId: string;
+// }
+interface audioListItem {
+  msgType: string,
+  source: string,
+  toUserFace?: string,
+  userFace?: string,
+  message: {
+    id: string,
+    content: string, // 聊天内容
+  }
 }
 
 export default Vue.extend({
@@ -147,65 +159,35 @@ export default Vue.extend({
       isFocus: false,
       showFile: false,
       showVoice: false,
+      needCancel: false,
       scrollHeight: "auto", // 内容区域高度
       statusBarHeight: 0, // 状态栏高度
       scrollViewId: "", // 滚动到最底部
       voicePlayingId: "", // 正在播放的消息ID
-      audioList: [],
+      audioList: [] as Array<audioListItem>,
       socketMsgQueue: [], // 消息队列
       fromUserId: uni.getStorageSync("userId"),
       fromUserFace: uni.getStorageSync("userFace"),
       toUserId: "",
       toUserName: "",
+      length: 0, // 语音条长度
+      startX: 0,
+      startY: 0,
+      timer: {}, // 定时器
     };
   },
-  // created  > onload  > mounted
-  onLoad(option: optionType): void {
+  mounted() {
     // 初始化内容高度
     this.setScrollHeight();
 
     // 初始化状态栏高度
     uni.getSystemInfo({
       success: (res) => {
-        this.statusBarHeight = res.statusBarHeight;
+        this.statusBarHeight = res.statusBarHeight || 0;
       },
     });
-
-    // 结束录音
-    recorderManger.onStop((res) => {
-      console.log("执行到这里了么");
-      this.upload(res.tempFilePath);
-    });
-
-    // 结束播放
-    innerAudioContext.onEnded(() => {
-      this.voicePlayingId = "";
-    });
-
-    // 设置标题
-    uni.setNavigationBarTitle({ title: option.toUserName });
-
-    // 获取参数
-    this.toUserId = option.toUserId;
-    this.toUserName = option.toUserName;
-
-    // 获取消息记录
-    this.getList();
-
-    // 监听webSocket消息
-    // this.$xbcim.onmessage(data=>{
-    // 	// 只接受单聊消息
-    // 	if(data.type != 'single') return
-
-    // 	// 处理数据
-    // 	data.id = data.extra.id
-    // 	data.userFace = data.extra.userFace
-    // 	this.list.push(data)
-    // 	this.initScrollBar()
-    // })
-  },
-  onHide() {
-    innerAudioContext.stop();
+      // 获取消息记录
+      this.getList();
   },
   methods: {
     // 初始化滚动
@@ -232,10 +214,10 @@ export default Vue.extend({
       this.scrollHeight = `calc(100vh - 110rpx - 88rpx - ${descHeight}px)`;
       // #endif
     },
-    handleTouchStart(e) {
+    handleTouchStart(e: any) {
       this.showVoice = true; // 打开语音 弹窗
       console.log(this.showVoice, "this.showVoice");
-      recorderManger.start();
+      recorderManger.start({format: 'mp3'});
       this.length = 1;
       // 位置  用来判断  滑动到哪里， 取消发送语音
       this.startX = e.touches[0].pageX;
@@ -244,12 +226,12 @@ export default Vue.extend({
       this.timer = setInterval(() => {
         this.length += 1;
         if (this.length >= 60) {
-          clearInterval(this.timer);
+          // clearInterval(this.timer);
           this.handleTouchEnd();
         }
       }, 1000);
     },
-    handleTouchMove(e) {
+    handleTouchMove(e: any) {
       if (
         this.startX - e.touches[0].pageX > 14 &&
         this.startY - e.touches[0].pageY > 50
@@ -261,68 +243,49 @@ export default Vue.extend({
     },
     // 发送语音
     handleTouchEnd() {
-      console.log("执行到这里了");
       this.showVoice = false;
-      clearInterval(this.tiemr);
+      // clearInterval(this.timer);
       recorderManger.stop();
       recorderManger.onStop((res) => {
-        console.log(res, "res44444444444444");
         const message = {
-          id: "1",
+          id: String(new Date().getTime()),
           content: res.tempFilePath,
           length: this.length,
         };
         if (!this.needCancel) {
-          this.inputSubmit(message, "voice");
+          this.pushMessage(message, "voice");
         }
         this.needCancel = false;
       });
     },
     // 语音 处理  发送接口
-    inputSubmit(message, msgType) {
-      // console.log(message);
-      this.audioList.push({
-        message,
+    pushMessage(message: any, msgType: any) {
+      let param = {
         msgType,
-      });
+        source: this.fromUserId,
+        userFace: uni.getStorageSync("userFace"),
+        toUserFace: '',
+        message
+      };
+      this.audioList.push(param);
 
-      postVoice().then(() => {});
+      // 初始化滚动条
+      // this.initScrollBar();
+      // 接口
+      // postVoice().then(() => {});
     },
     // 开始录音
     startVoice() {
       this.showVoice = true;
-      recorderManger.start();
+      recorderManger.start({format: 'mp3'});
     },
     // 结束录音
     endVoice() {
       this.showVoice = false;
       recorderManger.stop();
     },
-    // 上传
-    upload(filePath) {
-      this.util.loading("上传中");
-      // 上传路劲  TODO
-      url = "";
-      uni.uploadFile({
-        url: url,
-        name: "file",
-        filePath,
-        formData: {
-          userId: this.fromUserId,
-        },
-        header: this.util.getHeader(),
-        success: (res) => {
-          uni.hideLoading();
-          let data = JSON.parse(res.data);
-          this.pushMessage(data.data, "voice");
-        },
-        fail: (err) => {
-          uni.hideLoading();
-        },
-      });
-    },
     // 播放录音
-    playVoice(item) {
+    playVoice(item: audioListItem) {
       if (this.voicePlayingId) {
         this.voicePlayingId = "";
       } else {
@@ -331,8 +294,8 @@ export default Vue.extend({
         innerAudioContext.play();
       }
     },
-    // 长按
-    longPress(msg) {
+    // 长按消息 撤回消息
+    longPress(msg: any) {
       let data = {
         type: "single",
         source: this.fromUserId,
@@ -352,72 +315,12 @@ export default Vue.extend({
         data: JSON.stringify(data),
         success: () => {
           // 撤销本地消息
-          this.audioList = this.audioList.map((item) => {
+          this.audioList = this.audioList.map((item: any) => {
             item.type = item.id == msg.id ? "cancel" : item.type;
             return item;
           });
         },
       });
-    },
-    // 推送消息
-    pushMessage(content, type = "text", cb = () => {}) {
-      // 组合消息体：需要保存在本地数据库的数据
-      let msgData = {
-        fromUserId: this.fromUserId,
-        userFace: uni.getStorageSync("userFace"),
-        toUserId: this.toUserId,
-        type,
-        content,
-      };
-
-      // 加入信息
-      this.list.push({
-        source: this.fromUserId,
-        target: this.toUserId,
-        content: msgData.content,
-        userFace: uni.getStorageSync("userFace"),
-        type: "single",
-        msgType: type,
-      });
-
-      // 初始化滚动条
-      this.initScrollBar();
-      cb ? cb() : this.togglePicker(0, "file");
-
-      // var apiUrl = 'voice/all-voice';
-      request(apiUrl);
-      // postMessage(apiUrl);
-      // uni.request({
-      // 	url: apiUrl,
-      // 	data: {
-      // 		"key": 'free',
-      // 		"msg": encodeURI(content),
-      // 		"appid": 'wx07c87b31ee791408'
-      // 	},
-      // 	success: (res) => {
-      // 		console.log('request success:', res);
-      // 		// 加入信息
-      // 		this.list.push({
-      // 			source: this.fromUserId+1,
-      // 			target: this.toUserId,
-      // 			content: res.data.content,
-      // 			userFace: uni.getStorageSync('userFace'),
-      // 			type: 'single',
-      // 			msgType: type
-      // 		})
-
-      // 		// 初始化滚动条
-      // 		this.initScrollBar()
-      // 		cb ? cb() : this.togglePicker(0, 'file')
-      // 	},
-      // 	fail: (err) => {
-      // 		console.log('request fail333', err);
-      // 		uni.showModal({
-      // 			content: err.errMsg,
-      // 			showCancel: false
-      // 		})
-      // 	}
-      // });
     },
     // 获取记录
     getList() {
@@ -470,6 +373,8 @@ export default Vue.extend({
 .container {
   height: 100vh;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 /* #ifdef H5 */
@@ -610,14 +515,7 @@ export default Vue.extend({
 .scrollContent {
   overflow-y: auto;
   transition: all 0.1s ease;
-  height: calc(100vh - 88rpx - 110rpx - var(--status-bar-height) - 20rpx);
-
-  /* #ifdef MP-WEIXIN */
-  height: calc(100vh - 88rpx - var(--status-bar-height));
-  /* #endif */
-  /* #ifdef H5 */
-  height: calc(100vh - 88rpx - 110rpx - var(--status-bar-height));
-  /* #endif */
+  flex: 1;
 
   .item-space {
     height: 30rpx;
