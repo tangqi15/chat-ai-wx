@@ -1,8 +1,10 @@
+type StatusState = "success" | "loading" | "error" | "none" | "fail" | "exception";
+
 const util = {
 	loading(title='加载中'){
 		uni.showLoading({ title })
 	},
-	toast(title='', icon='none'){
+	toast(title = '', icon: StatusState = 'none'){
 		return uni.showToast({ title, icon })
 	},
 	getHeader(){
@@ -11,4 +13,4 @@ const util = {
 		}
 	}
 }
-export default util
+export default util;

@@ -57,7 +57,7 @@
   </view>
 </template>
 
-<script>
+<script lang="ts">
 import Vue from "vue";
 import tabBar from "@/wxcomponents/common/tab-bar.vue";
 export default Vue.extend({
@@ -87,7 +87,7 @@ export default Vue.extend({
     settingParameters() {
       this.registerShow = !this.registerShow;
     },
-    onChange(value) {
+    onChange(value: any) {
       this.slider = value.detail;
     },
     // 文字聊天

@@ -66,6 +66,7 @@ interface msgListInter {
   content: string, // 聊天内容
 }
 
+
 // 装饰器方式
 export default Vue.extend({
   components: { titleHeader },
@@ -84,7 +85,7 @@ export default Vue.extend({
     };
   },
   computed: {
-    windowHeight() :any {
+    windowHeight(): number {
       return this.rpxTopx(uni.getSystemInfoSync().windowHeight) - 28;
     },
   },
@@ -120,7 +121,7 @@ export default Vue.extend({
       }
     },
     // px转换成rpx
-    rpxTopx(px: any) {
+    rpxTopx(px: number) {
       let deviceWidth = wx.getSystemInfoSync().windowWidth;
       let rpx = (750 / deviceWidth) * Number(px);
       return Math.floor(rpx);

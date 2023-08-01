@@ -15,8 +15,17 @@ export const getAllVoice = () => {
     method: "GET",
   });
 };
+
+interface parasmType {
+  pageNo: number,
+  pageSize: number,
+  param: {
+    userId: string,
+    modelId: string,
+  },
+}
 // 查询聊天记录
-export const getChatHistory = (params: any) => 
+export const getChatHistory = (params: parasmType) => 
   request({
     data: params,
     url: "/chat/find-chat-history",

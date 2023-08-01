@@ -1,0 +1,8 @@
+{
+  "eslint.timeBudget.onValidation": {
+    "vetur.validation.interpolation": false,
+    "vetur.experimental.templateInterpolationService": false,
+    "warn": 4000,
+    "error": 8000
+  }
+}
