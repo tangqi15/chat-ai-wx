@@ -3,7 +3,10 @@
     <view class="content">
       <view class="headerButton">
         <van-button size="mini" type="info" @click="settingParameters"
-          >设置</van-button
+          >当前设置</van-button
+        >
+        <van-button size="mini" type="info" @click="settingMineInfo"
+          >个人中心</van-button
         >
       </view>
       <!-- 人物参数 -->
@@ -97,6 +100,9 @@ export default Vue.extend({
   methods: {
     settingParameters() {
       this.registerShow = !this.registerShow;
+    },
+    settingMineInfo() {
+      uni.navigateTo({ url: `/pages/mine/index` });
     },
     onChange(value: any) {
       this.slider = value.detail;

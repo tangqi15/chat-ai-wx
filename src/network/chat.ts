@@ -49,4 +49,12 @@ export const postVoice = (params: any) =>
     method: "POST",
   });
 
+  // 上传文件地址
+  export const uploadVoice = (params: any) => 
+  request({
+    data: params,
+    url: "/upload/update-voice-file",
+    method: "POST",
+  });
+
 

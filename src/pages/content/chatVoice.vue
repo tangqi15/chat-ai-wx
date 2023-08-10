@@ -126,7 +126,8 @@ import Vue from "vue";
 // import myVoice from "./self-voice.vue";
 // import util from "@/static/js/util";
 import titleHeader from "@/wxcomponents/common/cus-header.vue";
-// import { postVoice } from "@/network/chat";
+import upload from "@/common/upload";
+import { postVoice } from "@/network/chat";
 
 const innerAudioContext = uni.createInnerAudioContext();
 // uni  提供的全局录音管理器
@@ -246,9 +247,8 @@ export default Vue.extend({
       recorderManger.stop();
       recorderManger.onStop((res) => {
         const message = {
-          id: String(new Date().getTime()),
+          // id: String(new Date().getTime()),
           content: res.tempFilePath,
-          length: this.length,
         };
         if (!this.needCancel) {
           this.pushMessage(message, "voice");
@@ -257,37 +257,40 @@ export default Vue.extend({
       });
     },
     // 语音 处理  发送接口
-    pushMessage(message: any, msgType: any) {
-      // 上传文件
-      // this.uploadFile(message);
-
+    async pushMessage(message: any, msgType: any) {
+      // 上传文件  得到上传的地址
+      const messageUrl: any = await upload(message.content);
+      
       let param = {
         msgType,
         source: this.fromUserId,
         userFace: uni.getStorageSync("userFace"),
         toUserFace: "",
-        message,
+        message: message.content,
+        length: this.length,
+        messageUrl,
       };
-      this.audioList.push(param);
 
+      console.log(param, 'param');
+      
       // 初始化滚动条
       // this.initScrollBar();
       // 接口
-      // postVoice().then(() => {});
+      try {
+        postVoice(param)
+          .then((data: any) => {
+            if (data.success) {
+              // 前端数组 暂存
+              this.audioList.push(param);
+            }
+          })
+          .catch((fail) => {
+            console.log(fail, '没有发送成功');
+          });
+      } catch (e) {
+        console.log(e, "没有发送成功");
+      }
     },
-    // uploadFile(message) {
-    //   let token = uni.getStorageasync("token");
-    //   uni.uploadFile({
-    //     url: "resume/voiceToText",
-    //     name: "file",
-    //     filePath: this.voicePath,
-    //     header: {
-    //       Authorization: `bearer ${token}`,
-    //     },
-    //     success: (res: any) => {},
-    //     fail: (err: any) => {},
-    //   });
-    // },
     // 开始录音
     startVoice() {
       this.showVoice = true;
