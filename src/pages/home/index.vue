@@ -1,73 +1,65 @@
 <template>
-  <view class="container" :style="{ backgroundImage: 'url(' + imageURL + ')' }">
+  <!-- <view class="container" :style="{ backgroundImage: 'url(' + imageURL + ')' }"> -->
+  <view class="container">
     <view class="content">
       <view class="headerButton">
         <van-button size="mini" type="info" @click="settingParameters"
           >当前设置</van-button
         >
-        <van-button size="mini" type="info" @click="settingMineInfo"
+        <!-- <van-button size="mini" type="info" @click="settingMineInfo"
           >个人中心</van-button
-        >
+        > -->
+      </view>
+      <!-- 人物模型 -->
+      <view class="model" hover-class="none" hover-stop-propagation="false">
+        <image class="modelImage" src="@/static/imgs/lisa.png"></image>
+      </view>
+      <!-- 人物 (男、女 )  、
+      声音（方言、普通话， 声音类型（例如: 御女、萝莉）可以试听 ）
+      性格 （性格描述）、
+      AI的经历描述（   AI个人背景信息  ） -->
+      <!-- 人物属性 -->
+      <view class="" hover-class="none" hover-stop-propagation="false" v-if="characterAttributesShow">
+          <view>
+            男 女
+          </view>
+      </view>
+      <!-- 声音模块 -->
+      <view class="" hover-class="none" hover-stop-propagation="false" v-if="soundShow">
+          <view>
+          </view>
+      </view>
+      <!-- 性格模块 -->
+      <view class="" hover-class="none" hover-stop-propagation="false" v-if="characterShow">
+          <view>
+          </view>
+      </view>
+      <!-- 经历描述模块 -->
+      <view class="" hover-class="none" hover-stop-propagation="false" v-if="experienceShow">
+          你希望他有什么经历: <input type="text">
       </view>
       <!-- 人物参数 -->
       <view class="characterProperty">
-        <view v-if="registerShow">
-          <view>
-            <view class="propItemClass">
-              <view class="" hover-class="none" hover-stop-propagation="false">
-                性别：
-              </view>
-              <image class="rowImage" src="@/static/img/face.png"></image>
-              <view class="rowSlider" hover-class="none" hover-stop-propagation="false">
-                  <van-slider v-model="slider" active-color="#ee0a24" bar-height="4px" :min="0" :max="50"
-                      @change="onChange">
-                  </van-slider>
-              </view>
-              <view>
-                {{ slider }}
-              </view>
-            </view>
-            <view class="propItemClass">
-              <view class="" hover-class="none" hover-stop-propagation="false">
-                年龄：
-              </view>
-              <image class="rowImage" src="@/static/img/face.png"></image>
-              <view class="rowSlider" hover-class="none" hover-stop-propagation="false">
-                  <van-slider v-model="slider" active-color="#ee0a24" bar-height="4px" :min="0" :max="50"
-                      @change="onChange">
-                  </van-slider>
-              </view>
-              <view>
-                {{ slider }}
-              </view>
-            </view>
-          </view>
-          <view class="propItemClass">
-              <view class="" hover-class="none" hover-stop-propagation="false">
-                年龄：
-              </view>
-              <image class="rowImage" src="@/static/img/face.png"></image>
-              <view class="rowSlider" hover-class="none" hover-stop-propagation="false">
-                  <van-slider v-model="slider" active-color="#ee0a24" bar-height="4px" :min="0" :max="50"
-                      @change="onChange">
-                  </van-slider>
-              </view>
-              <view>
-                {{ slider }}
-              </view>
-            </view>
-            <view class="characterButton">
-            <van-button size="mini" type="info">确定</van-button>
-          </view>
-          </view>
-      </view>
+        <view v-if="registerShow" class="registerMenu">
+          <!-- 人物属性 -->
+          <view class="" @click="characterAttributes"><image class="rowImage" src="@/static/img/face.png"></image></view>
+          <!-- 声音 -->
+          <view class="" @click="characterSound"><image class="rowImage" src="@/static/img/face.png"></image></view>
+          <!-- 性格 -->
+          <view class="" @click="characterCharacter"><image class="rowImage" src="@/static/img/face.png"></image></view>
+          <!-- AI的经历描述 -->
+          <view class="" @click="characterExperience"><image class="rowImage" src="@/static/img/face.png"></image></view>
+        </view>
     </view>
+
+    
     <!-- <tabBar :active="0"></tabBar> -->
     <view class="footButton">
       <view @click="chatVoice">语音聊天</view>
       <view @click="chatFont">文字聊天</view>
     </view>
   </view>
+</view>
 </template>
 
 <script lang="ts">
@@ -87,6 +79,11 @@ export default Vue.extend({
       radio: "1",
 			fromUserFace: uni.getStorageSync('userFace'),
       slider: 30, // 滑块
+
+      characterAttributesShow: false, // 人物属性模块
+      soundShow: false, // 声音模块
+      characterShow: false, // 性格模块
+      experienceShow: false, // 经历描述模块
     };
   },
   computed: {
@@ -116,6 +113,23 @@ export default Vue.extend({
     chatVoice() {
       uni.navigateTo({ url: `/pages/content/chatVoice` });
     },
+
+
+
+
+    // 人物属性模块
+    characterAttributes() {
+      this.characterAttributesShow = true;
+    },
+    characterSound() {
+      this.soundShow = true;
+    },
+    characterCharacter() {
+      this.characterShow = true;
+    },
+    characterExperience() {
+      this.experienceShow = true;
+    }
   },
 });
 </script>
@@ -126,9 +140,9 @@ export default Vue.extend({
   display: flex;
   flex-direction: column;
   height: 95vh;
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-  background-origin: content-box;
+  // background-size: 100% 100%;
+  // background-repeat: no-repeat;
+  // background-origin: content-box;
 }
 
 .content {
@@ -185,5 +199,26 @@ export default Vue.extend({
 .rowSlider {
   flex: 1;
   margin: 0rpx 40rpx;
+}
+
+
+
+
+// 人物模型
+.model {
+  width: 100%;
+  // height: 100%;
+  // padding: 10px;
+  // margin: 10px;
+}
+.modelImage {
+  width: 100%;
+  // height: 100%;
+}
+
+
+.registerMenu {
+  display: flex;
+  justify-content: space-around;
 }
 </style>

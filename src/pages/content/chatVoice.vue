@@ -11,22 +11,22 @@
         <view class="item-space"></view>
         <!-- <view class="time">晚上 10:04</view> -->
         <view v-for="(item, index) in audioList" :key="index">
+          {{ item }}
           <!--撤销-->
-          <view v-if="item.msgType == 'cancel'" class="cancel">
-            <text v-if="item.source == fromUserId" class="text"
-              >你撤回了一条消息</text
-            >
+          <view v-if="item.msgType === 3" class="cancel">
+            <!-- <text v-if="item.source == fromUserId" class="text"
+              >你撤回了一条消息</text>
             <text v-else class="text"
               >成员 {{ item.source }} 撤回了一条消息</text
-            >
+            > -->
           </view>
           <view
             v-else
             class="item flex-row"
-            :class="[item.source == fromUserId ? 'right' : 'left']"
+            :class="[item.chatType == 0 ? 'right' : 'left']"
           >
             <!--处理头像-->
-            <view v-if="item.source == fromUserId">
+            <view v-if="item.chatType == 0">
               <image
                 v-if="fromUserFace"
                 :src="fromUserFace"
@@ -44,17 +44,17 @@
             </view>
             <!--语音-->
             <view
-              v-if="item.msgType == 'voice'"
-              @tap="playVoice(item)"
+              v-if="item.msgType === 1"
+              @tap="playVoice(item, index)"
               class="content"
             >
               <image
-                v-show="voicePlayingId != item.message.id"
+                v-show="voicePlayingId !== index"
                 src="@/static/img/audio.png"
                 class="voice-icon"
               ></image>
               <image
-                v-show="voicePlayingId == item.message.id"
+                v-show="voicePlayingId === index"
                 src="@/static/img/audio-play.gif"
                 class="voice-icon"
               ></image>
@@ -127,7 +127,7 @@ import Vue from "vue";
 // import util from "@/static/js/util";
 import titleHeader from "@/wxcomponents/common/cus-header.vue";
 import upload from "@/common/upload";
-import { postVoice } from "@/network/chat";
+import { getChatHistory, postVoice } from "@/network/chat";
 
 const innerAudioContext = uni.createInnerAudioContext();
 // uni  提供的全局录音管理器
@@ -139,14 +139,16 @@ const recorderManger = uni.getRecorderManager();
 //   toUserId: string;
 // }
 interface audioListItem {
-  msgType: string;
-  source: string;
+  msgType?: number;
+  userId?: string;
+  modelId?: string;
+  sessionId?: string;
+  sessionChatId?: string;
   toUserFace?: string;
   userFace?: string;
-  message: {
-    id: string;
-    content: string; // 聊天内容
-  };
+  voiceUrl: string;
+  message?: string;
+  chatType?: number; // 0: 我发送  1： 接收
 }
 
 export default Vue.extend({
@@ -163,7 +165,7 @@ export default Vue.extend({
       scrollHeight: "auto", // 内容区域高度
       statusBarHeight: 0, // 状态栏高度
       scrollViewId: "", // 滚动到最底部
-      voicePlayingId: "", // 正在播放的消息ID
+      voicePlayingId: 0, // 正在播放的消息ID
       audioList: [] as Array<audioListItem>,
       socketMsgQueue: [], // 消息队列
       fromUserId: uni.getStorageSync("userId"),
@@ -174,12 +176,14 @@ export default Vue.extend({
       startX: 0,
       startY: 0,
       timer: {}, // 定时器
+      // TODO  临时数据
+      userId: "135b4947f1644b76b9d5c614782fc84a",
+      modelId: "64a561d1f51062cd3d0fb178",
     };
   },
   mounted() {
     // 初始化内容高度
     this.setScrollHeight();
-
     // 初始化状态栏高度
     uni.getSystemInfo({
       success: (res) => {
@@ -187,7 +191,7 @@ export default Vue.extend({
       },
     });
     // 获取消息记录
-    this.getList();
+    this.getChatHistorys();
   },
   methods: {
     // 初始化滚动
@@ -251,7 +255,7 @@ export default Vue.extend({
           content: res.tempFilePath,
         };
         if (!this.needCancel) {
-          this.pushMessage(message, "voice");
+          this.pushMessage(message, 1);
         }
         this.needCancel = false;
       });
@@ -259,20 +263,22 @@ export default Vue.extend({
     // 语音 处理  发送接口
     async pushMessage(message: any, msgType: any) {
       // 上传文件  得到上传的地址
-      const messageUrl: any = await upload(message.content);
-      
+      const voiceUrl: any = await upload(message.content);
+
       let param = {
         msgType,
-        source: this.fromUserId,
-        userFace: uni.getStorageSync("userFace"),
-        toUserFace: "",
-        message: message.content,
+        chatType: 0,
+        // userId: uni.getStorageSync("userId"),
+        useId: this.userId,
+        modelId: this.modelId,
+        sessionId: "",
+        sessionChatId: "",
         length: this.length,
-        messageUrl,
+        voiceUrl,
       };
 
-      console.log(param, 'param');
-      
+      console.log(param, "param");
+
       // 初始化滚动条
       // this.initScrollBar();
       // 接口
@@ -285,7 +291,7 @@ export default Vue.extend({
             }
           })
           .catch((fail) => {
-            console.log(fail, '没有发送成功');
+            console.log(fail, "没有发送成功");
           });
       } catch (e) {
         console.log(e, "没有发送成功");
@@ -302,12 +308,12 @@ export default Vue.extend({
       recorderManger.stop();
     },
     // 播放录音
-    playVoice(item: audioListItem) {
+    playVoice(item: audioListItem, index: number) {
       if (this.voicePlayingId) {
-        this.voicePlayingId = "";
+        this.voicePlayingId = 0;
       } else {
-        this.voicePlayingId = item.message.id;
-        innerAudioContext.src = item.message.content;
+        this.voicePlayingId = index;
+        innerAudioContext.src = item.voiceUrl;
         innerAudioContext.play();
       }
     },
@@ -340,41 +346,31 @@ export default Vue.extend({
       });
     },
     // 获取记录
-    getList() {
-      setTimeout(() => {
-        this.scrollViewId = "bottom";
-        setTimeout(() => {
-          this.scrollViewId = "";
-        }, 100);
-      }, 100);
-      // uni.request({
-      // 	url: this.$api.getSingleRecord,
-      // 	data: {
-      // 		fromUserId: this.fromUserId,
-      // 		toUserId: this.toUserId
-      // 	},
-      // 	header: this.util.getHeader(),
-      // 	success: res=>{
-      // 		this.list = res.data.data.map(item=>{
-      // 			if(['voice', 'image'].includes(item.type)){
-      // 				item.content = this.$api.staticPath+item.content
-      // 			}
-      // 			if(item.toUserFace){
-      // 				item.toUserFace = this.$api.staticPath+item.toUserFace
-      // 			}
-
-      // 			// 为了和socket的字段一致，此处做一个转换；
-      // 			// 数据表字段可以直接设置为source、target和msgType
-      // 			item.source = item.fromUserId
-      // 			item.target = item.toUserId
-      // 			item.msgType = item.type
-      // 			return item
-      // 		})
-
-      // 		this.scrollViewId = ''
-
-      // 	}
-      // })
+    async getChatHistorys() {
+      let params = {
+        pageNo: 1,
+        pageSize: 10,
+        param: {
+          userId: this.userId,
+          modelId: this.modelId,
+          chatMethod: 1, // 0文字 1语音
+        },
+      };
+      console.log('ccccccccccccccc');
+      
+      try {
+        getChatHistory(params)
+          .then((data: any) => {
+            console.log(data, 'dataccccccccc');
+            
+            this.audioList = data;
+          })
+          .catch((fail) => {
+            console.log(fail, '...............');
+          });
+      } catch (e) {
+        console.log(e, "获取记录失败");
+      }
     },
   },
 });
