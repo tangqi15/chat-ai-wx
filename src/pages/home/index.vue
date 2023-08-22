@@ -9,9 +9,9 @@
           <image class="settingImg" src="@/static/imgs/setting.png" @click="settingParameters"></image>
           <!-- </van-button
         > -->
-        <van-button size="mini" type="info" @click="settingMineInfo"
+        <!-- <van-button size="mini" type="info" @click="settingMineInfo"
           >个人中心</van-button
-        >
+        > -->
       </view>
       <!-- 人物模型 -->
       <view class="model" :style="{ backgroundImage: 'url(' + modelUrl + ')' }">
@@ -25,24 +25,24 @@
 
       <!-- 人物参数 -->
       <view class="characterProperty">
-       
-
         <!-- 人物 (男、女 )  、
       声音（方言、普通话， 声音类型（例如: 御女、萝莉）可以试听 ）
       性格 （性格描述）、
       AI的经历描述（   AI个人背景信息  ） -->
         <!-- 人物属性 -->
         <view
-          class=""
+          class="sexBox"
           hover-class="none"
           hover-stop-propagation="false"
           v-if="characterAttributesShow"
         >
-          <van-radio-group v-model="sexRadio" class="sexStyle">
+      <span class="label">请选择人物性别：</span>
+       <van-radio-group v-model="sexRadio" class="sexStyle" direction="horizontal">
             <van-radio name="1"><view class="colorWhite">女</view></van-radio>
             <van-radio name="2"><view class="colorWhite">男</view></van-radio>
           </van-radio-group>
         </view>
+
         <!-- 声音模块 -->
         <view
           class=""
@@ -55,7 +55,8 @@
             <!-- 方言 -->
             <!-- 方言还是普通话 -->
             <view class="soundRadio">
-              <van-radio-group v-model="radio" @click="soundRadioClick">
+              <span class="label">请选择：</span>
+              <van-radio-group v-model="radio" @change="soundRadioClick" direction="horizontal">
                 <van-radio name="1"><view class="colorWhite">方言</view></van-radio>
                 <van-radio name="2"><view class="colorWhite">普通话</view></van-radio>
               </van-radio-group>
@@ -158,9 +159,11 @@
           </view>
         </view>
         <view v-if="!registerShow" class="registerMenu">
-        <view @click="chatVoice">语音聊天</view>
-        <view @click="chatFont">文字聊天</view>
-      </view>
+          <van-button type="primary" class="resisterButton" round @click="chatVoice">语音聊天</van-button>
+          <van-button type="info" class="resisterButton" round @click="chatFont">文字聊天</van-button>
+          <!-- <view @click="chatVoice">语音聊天</view>
+          <view @click="chatFont">文字聊天</view> -->
+        </view>
       </view>
      
       
@@ -196,7 +199,7 @@ export default Vue.extend({
 
       modelUrl: "/static/imgs/lisa2.png",
 
-      sexualWomanShow: false,
+      sexualWomanShow: true,
       loriShow: false,
       auntShow: false,
     };
@@ -266,7 +269,10 @@ export default Vue.extend({
       this.characterAttributesShow = false;
     },
     soundRadioClick(val: any) {
-      console.log(val, "val");
+      this.radio = val.detail;
+    },
+    sexRadioClick(val: any) {
+      this.sexRadio = val.detail;
     },
     // 御女类型点击
     sexualClick() {
@@ -326,7 +332,7 @@ export default Vue.extend({
 // 人物参数
 .characterProperty {
   position: absolute;
-  bottom: 40px;
+  bottom: 45px;
   // left: 100px;
   width: 100%;
   background-color: rgb(85 0 0 / 40%);
@@ -394,8 +400,11 @@ export default Vue.extend({
 .registerMenu {
   display: flex;
   justify-content: space-around;
-  margin: 10px 0px;
+  // margin: 10px 0px;
 }
+// .resisterButton {
+//   border-radius: 50%;
+// }
 
 .soundRadio {
   display: flex;
@@ -410,10 +419,15 @@ export default Vue.extend({
   border-radius: 10px;
 }
 
+.sexBox {
+  display: flex;
+}
 .sexStyle {
   display: flex;
 }
-
+.label {
+  margin-right: 20px;
+}
 
 .rowImageBox {
   // box-sizing: border-box;
