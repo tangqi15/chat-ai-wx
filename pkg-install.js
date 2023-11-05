@@ -10,6 +10,7 @@ const pkgList = [{
   from: './@vant/weapp/dist',
   to: './vant/dist',
 }];
+// test github
 
 const copy = (base, pkg) => {
   const from = `${path.join(__dirname, base.from)}/${pkg.from}`;
